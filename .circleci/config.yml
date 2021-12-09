@@ -51,7 +51,14 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/aws-rough
-      - run: sudo pip install awscli
+      - run:
+          name: install aws-cli
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y python-pip python-dev
+            sudo pip install awscli
+            aws --version
+      # - run: sudo pip install awscli
       - run: aws s3 sync ./dist/ s3://hosting-portfolio --exact-timestamps --delete --exclude "*" --include "*.html" --cache-control no-store
       - run: aws s3 sync ./dist/ s3://hosting-portfolio --exact-timestamps --delete --exclude "*" --include "*.js" --cache-control max-age=31536000
       - run: aws s3 sync ./dist/ s3://hosting-portfolio --exact-timestamps --delete --exclude "*" --include "*.css" --cache-control no-store
