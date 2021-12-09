@@ -1,9 +1,10 @@
 version: 2
+orbs:
+  aws-cli: circleci/aws-cli@2.0
 defaults: &defaults
   working_directory: ~/aws-rough
   docker:
-    # - image: circleci/python:3.6.8-jessie-node-browsers
-    - image: cimg/node:15.0.1
+    - image: cimg/python:3.9.6-browsers
 filter_only_main: &filter_only_main
   filters:
     branches:
