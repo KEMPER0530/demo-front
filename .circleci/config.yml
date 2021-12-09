@@ -60,12 +60,12 @@ jobs:
             sudo pip install awscli
             aws --version
       # - run: sudo pip install awscli
-      - run: aws s3 sync ./dist/ s3://hosting-portfolio --exact-timestamps --delete --exclude "*" --include "*.html" --cache-control no-store
-      - run: aws s3 sync ./dist/ s3://hosting-portfolio --exact-timestamps --delete --exclude "*" --include "*.js" --cache-control max-age=31536000
-      - run: aws s3 sync ./dist/ s3://hosting-portfolio --exact-timestamps --delete --exclude "*" --include "*.css" --cache-control no-store
-      - run: aws s3 sync ./dist/ s3://hosting-portfolio --exact-timestamps --delete --exclude "*" --include "*.json" --cache-control no-store
-      - run: aws s3 sync ./dist/ s3://hosting-portfolio --exact-timestamps --delete --exclude "*" --include "*.png" --cache-control no-store
-      - run: aws s3 sync ./dist/ s3://hosting-portfolio --exact-timestamps --delete --exclude "*" --include "*.nojekyll" --cache-control no-store
+      - run: aws s3 sync ./dist/ s3://nuxt-mail-demo --exact-timestamps --delete --exclude "*" --include "*.html" --cache-control no-store
+      - run: aws s3 sync ./dist/ s3://nuxt-mail-demo --exact-timestamps --delete --exclude "*" --include "*.js" --cache-control max-age=31536000
+      - run: aws s3 sync ./dist/ s3://nuxt-mail-demo --exact-timestamps --delete --exclude "*" --include "*.css" --cache-control no-store
+      - run: aws s3 sync ./dist/ s3://nuxt-mail-demo --exact-timestamps --delete --exclude "*" --include "*.json" --cache-control no-store
+      - run: aws s3 sync ./dist/ s3://nuxt-mail-demo --exact-timestamps --delete --exclude "*" --include "*.png" --cache-control no-store
+      - run: aws s3 sync ./dist/ s3://nuxt-mail-demo --exact-timestamps --delete --exclude "*" --include "*.nojekyll" --cache-control no-store
 
 workflows:
   version: 2
