@@ -2,7 +2,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/aws-rough
   docker:
-      - image: cimg/node:17.2.0
+    - image: circleci/python:3.6.8-jessie-node-browsers
 filter_only_main: &filter_only_main
   filters:
     branches:
@@ -16,7 +16,7 @@ jobs:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
-      - run: yarn install
+      - run: nvm install --lts && npm install -g yarn && yarn install
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
