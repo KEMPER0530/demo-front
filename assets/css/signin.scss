@@ -1,0 +1,137 @@
+/* Fonts */
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400);
+
+/* fontawesome */
+
+@import url(https://weloveiconfonts.com/api/?family=fontawesome);
+[class*="fontawesome-"]:before {
+    font-family: 'FontAwesome', sans-serif;
+}
+
+
+/* Form Layout */
+
+.form-wrapper {
+    background: #fafafa;
+    margin: auto;
+    padding: 0 1em;
+    box-sizing: border-box;
+    color: #5e5e5e;
+    @media (max-width: 440px) {
+        min-width: 300px;
+    }
+    @media (max-width: 519px) {
+        min-width: 400px;
+    }
+    @media (max-width: 959px) {
+        min-width: 500px;
+    }
+    min-width: 600px;
+}
+
+h1 {
+    text-align: center;
+    padding: 1em 0;
+}
+
+.form-item {
+    margin-bottom: 0.75em;
+    width: 100%;
+    padding: 0 1.5em;
+}
+
+.form-item input {
+    background: #fafafa;
+    border: none;
+    border-bottom: 2px solid #e9e9e9;
+    color: #666;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+    height: 50px;
+    transition: border-color 0.3s;
+    width: 100%;
+}
+
+.form-item input:focus {
+    border-bottom: 2px solid #c0c0c0;
+    outline: none;
+}
+
+.button-panel {
+    margin: 2em 0 0;
+    width: 100%;
+}
+
+.button-panel .signin-button {
+    background: #f16272;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    height: 50px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2em;
+    letter-spacing: 0.05em;
+    text-align: center;
+    text-transform: uppercase;
+    transition: background 0.3s ease-in-out;
+    width: 100%;
+}
+
+.signin-button:hover {
+    background: #ee3e52;
+}
+
+.button-panel .signup-button {
+    background: #6060ef;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    height: 50px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2em;
+    letter-spacing: 0.05em;
+    text-align: center;
+    text-transform: uppercase;
+    transition: background 0.3s ease-in-out;
+    width: 100%;
+}
+
+.signup-button:hover {
+    background: #073bf6;
+}
+
+.button-panel .activate-button {
+    background: #60ef62;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    height: 50px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2em;
+    letter-spacing: 0.05em;
+    text-align: center;
+    text-transform: uppercase;
+    transition: background 0.3s ease-in-out;
+    width: 100%;
+}
+
+.activate-button:hover {
+    background: #1ff607;
+}
+
+.form-footer {
+    font-size: 1em;
+    padding: 2em 0;
+    text-align: center;
+}
+
+.form-footer a {
+    color: #8c8c8c;
+    text-decoration: none;
+    transition: border-color 0.3s;
+}
+
+.form-footer a:hover {
+    border-bottom: 1px dotted #8c8c8c;
+}
