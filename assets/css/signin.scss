@@ -18,16 +18,13 @@
     padding: 0 1em;
     box-sizing: border-box;
     color: #5e5e5e;
-    @media (max-width: 440px) {
-        min-width: 300px;
+    min-width: 350px;
+    @media (min-width: 481px) {
+        min-width: 450px;
     }
-    @media (max-width: 519px) {
-        min-width: 400px;
+    @media (min-width: 769px) {
+        min-width: 700;
     }
-    @media (max-width: 959px) {
-        min-width: 500px;
-    }
-    min-width: 600px;
 }
 
 h1 {
