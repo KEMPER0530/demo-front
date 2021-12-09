@@ -3,10 +3,10 @@ defaults: &defaults
   working_directory: ~/aws-rough
   docker:
     - image: circleci/python:3.6-jessie-node-browsers
-filter_only_master: &filter_only_master
+filter_only_main: &filter_only_main
   filters:
     branches:
-      only: master
+      only: main
 jobs:
   install:
     <<: *defaults
@@ -66,12 +66,12 @@ workflows:
           requires:
             - install
       - build:
-          <<: *filter_only_master
+          <<: *filter_only_main
           requires:
             - install
             - test
       - deploy:
-          <<: *filter_only_master
+          <<: *filter_only_main
           requires:
             - install
             - test
