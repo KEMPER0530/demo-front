@@ -2,7 +2,8 @@ version: 2
 defaults: &defaults
   working_directory: ~/aws-rough
   docker:
-    - image: circleci/python:3.6.8-jessie-node-browsers
+    # - image: circleci/python:3.6.8-jessie-node-browsers
+    - image: cimg/node:15.0.1
 filter_only_main: &filter_only_main
   filters:
     branches:
