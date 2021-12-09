@@ -16,7 +16,7 @@ jobs:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
-      - run: nvm install --lts && npm install -g yarn && yarn install
+      - run: yarn install
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
