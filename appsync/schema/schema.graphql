@@ -1,0 +1,123 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Mutation {
+  createNuxtMail(input: CreateNuxtMailInput!): NuxtMail
+  deleteNuxtMail(input: DeleteNuxtMailInput!): NuxtMail
+  updateNuxtMail(input: UpdateNuxtMailInput!): NuxtMail
+}
+
+type NuxtMail {
+  body: String
+  createdat: String
+  from: String
+  id: ID!
+  subject: String
+  to: String
+  updatedat: String
+}
+
+type NuxtMailConnection {
+  items: [NuxtMail]
+  nextToken: String
+}
+
+type Query {
+  getNuxtMail(id: ID!): NuxtMail
+  listNuxtMails(filter: TableNuxtMailFilterInput, limit: Int, nextToken: String): NuxtMailConnection
+}
+
+type Subscription {
+  onCreateNuxtMail(body: String, from: String, id: ID, subject: String, to: String): NuxtMail @aws_subscribe(mutations : ["createNuxtMail"])
+  onDeleteNuxtMail(body: String, from: String, id: ID, subject: String, to: String): NuxtMail @aws_subscribe(mutations : ["deleteNuxtMail"])
+  onUpdateNuxtMail(body: String, from: String, id: ID, subject: String, to: String): NuxtMail @aws_subscribe(mutations : ["updateNuxtMail"])
+}
+
+input CreateNuxtMailInput {
+  body: String
+  createdat: String
+  from: String
+  subject: String
+  to: String
+  updatedat: String
+}
+
+input DeleteNuxtMailInput {
+  id: ID!
+}
+
+input TableBooleanFilterInput {
+  eq: Boolean
+  ne: Boolean
+}
+
+input TableFloatFilterInput {
+  between: [Float]
+  contains: Float
+  eq: Float
+  ge: Float
+  gt: Float
+  le: Float
+  lt: Float
+  ne: Float
+  notContains: Float
+}
+
+input TableIDFilterInput {
+  beginsWith: ID
+  between: [ID]
+  contains: ID
+  eq: ID
+  ge: ID
+  gt: ID
+  le: ID
+  lt: ID
+  ne: ID
+  notContains: ID
+}
+
+input TableIntFilterInput {
+  between: [Int]
+  contains: Int
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+  notContains: Int
+}
+
+input TableNuxtMailFilterInput {
+  body: TableStringFilterInput
+  from: TableStringFilterInput
+  id: TableIDFilterInput
+  subject: TableStringFilterInput
+  to: TableStringFilterInput
+}
+
+input TableStringFilterInput {
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+}
+
+input UpdateNuxtMailInput {
+  body: String
+  createdat: String
+  from: String
+  id: ID!
+  subject: String
+  to: String
+  updatedat: String
+}
