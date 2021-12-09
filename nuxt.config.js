@@ -1,4 +1,24 @@
+require("dotenv").config()
+const {
+    AWS_APPSYNC_REIGION,
+    AWS_APPSYNC_GRAPHQL_ENDPOINT,
+    AWS_APPSYNC_AUTHENTICATION_TYPE,
+    AWS_APPSYNC_APIKEY,
+    AWS_COGNITO_REIGION,
+    AWS_COGNITO_USERPOOLID,
+    AWS_COGNITO_USERPOOLWEBCLIENTID
+} = process.env
+
 export default {
+    env: {
+        AWS_APPSYNC_REIGION,
+        AWS_APPSYNC_GRAPHQL_ENDPOINT,
+        AWS_APPSYNC_AUTHENTICATION_TYPE,
+        AWS_APPSYNC_APIKEY,
+        AWS_COGNITO_REIGION,
+        AWS_COGNITO_USERPOOLID,
+        AWS_COGNITO_USERPOOLWEBCLIENTID
+    },
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
 
