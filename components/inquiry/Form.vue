@@ -157,14 +157,19 @@ export default defineComponent({
                   subject: subject.value,
                   body: body.value,
                   createdat: date,
-                  updatedat: date
+                  updatedat: date,
+                  responce: 0,
+                  result: ""
                 })
               )
           // @ts-ignore
-          //console.log(result.data.createNuxtMail)
-          if(typeof result  !== 'undefined' && result  != null ){
+          console.log(result.data.createNuxtMailToLambda.responce)
+          // @ts-ignore
+          if(result.data.createNuxtMailToLambda.responce === 200 ){
             isSubmited.value = true
           }else{
+            // @ts-ignore
+            console.log(result.data.createNuxtMailToLambda.responce + " / " + result.data.createNuxtMailToLambda.result)
             alert("メール送信に失敗しました")
           }
         return result
@@ -174,7 +179,7 @@ export default defineComponent({
         }
       }catch(error){
         console.error(error)
-        alert("メール送信に失敗しました")
+        alert("メール送信に失敗しました: " + error.errors[0].message)
       }
     }
 
