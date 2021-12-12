@@ -1,13 +1,16 @@
 export const createNuxtMail = `
-  mutation createNuxtMail(
+  mutation createNuxtMailToLambda(
     $from: String,
     $to: String,
     $subject: String,
     $body: String,
     $createdat: String,
-    $updatedat: String
+    $updatedat: String,
+    $responce: Int,
+    $result: String
   ) {
-    createNuxtMail(input: {body: $body, from: $from, subject: $subject, to: $to, createdat: $createdat, updatedat: $updatedat})
+    createNuxtMailToLambda(body: $body, from: $from, subject: $subject, to: $to,
+                           createdat: $createdat, updatedat: $updatedat, responce: $responce, result: $result)
     {
       body
       from
@@ -15,5 +18,7 @@ export const createNuxtMail = `
       to
       createdat
       updatedat
+      responce
+      result
     }
   }`;
