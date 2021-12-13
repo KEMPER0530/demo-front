@@ -21,7 +21,7 @@
               <FromInput
                 v-model="from"
                 :type="'text'"
-                :placeholder="'from@kemper0530.com'"
+                :placeholder="'from@example.com'"
               />
               <Error
                 v-if="params.from.$dirty && params.from.$anyInvalid"
@@ -35,7 +35,7 @@
               <ToInput
                 v-model="to"
                 :type="'text'"
-                :placeholder="'to@kemper0530.com'"
+                :placeholder="'to@example.com'"
               />
               <Error
                 v-if="params.to.$dirty && params.to.$anyInvalid"
@@ -71,7 +71,7 @@
               />
             </div>
             <div class="mb-6">
-              <Button @click="onSubmit">SEND</Button>
+              <Button @click="onSubmit">送信</Button>
             </div>
           </form>
         </div>
