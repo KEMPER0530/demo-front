@@ -55,7 +55,7 @@ jobs:
           arguments: |
             --acl public-read \
             --cache-control "max-age=86400"
-          from: dist
+          from: ./dist/
           to: s3://${BACKET_NAME}
 
 workflows:
