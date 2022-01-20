@@ -1,4 +1,3 @@
-require("dotenv").config()
 const {
     AWS_APPSYNC_REIGION,
     AWS_APPSYNC_GRAPHQL_ENDPOINT,
@@ -6,7 +5,9 @@ const {
     AWS_APPSYNC_APIKEY,
     AWS_COGNITO_REIGION,
     AWS_COGNITO_USERPOOLID,
-    AWS_COGNITO_USERPOOLWEBCLIENTID
+    AWS_COGNITO_USERPOOLWEBCLIENTID,
+    MODE,
+    QIITA_API
 } = process.env
 
 export default {
@@ -17,7 +18,9 @@ export default {
         AWS_APPSYNC_APIKEY,
         AWS_COGNITO_REIGION,
         AWS_COGNITO_USERPOOLID,
-        AWS_COGNITO_USERPOOLWEBCLIENTID
+        AWS_COGNITO_USERPOOLWEBCLIENTID,
+        MODE,
+        QIITA_API
     },
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
@@ -44,11 +47,15 @@ export default {
 
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [
-        '@/assets/css/signin.scss'
+        '@/assets/css/signin.scss',
+        '@/assets/css/search.scss',
+        'element-ui/lib/theme-chalk/index.css'
     ],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [{ src: '@/plugins/amplify.js', mode: 'client' }, ],
+    plugins: [{ src: '@/plugins/amplify.js', mode: 'client' },
+        '~plugins/element-ui', { src: '~plugins/element-ui', ssr: false }
+    ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -81,7 +88,8 @@ export default {
             config.node = {
                 fs: "empty"
             };
-        }
+        },
+        vendor: ['axios', 'element-ui'],
     },
     auth: {
         redirect: {

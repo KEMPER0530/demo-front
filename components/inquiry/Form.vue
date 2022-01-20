@@ -6,9 +6,8 @@
           <h1
             class="my-3 text-3xl font-semibold text-gray-700"
           >
-            <b>メール送信デモ</b>
+            <nuxt-link to="/" type="String">メール送信デモ</nuxt-link>
           </h1>
-          <h3 v-if="!isSubmited" class="my-2 text-1sm font-semibold text-gray-700">To宛にメール送信します</h3>
         </div>
         <Submitted v-if="isSubmited" />
         <div v-if="!isSubmited" class="m-7">
@@ -92,6 +91,7 @@ import Button from '@/components/inquiry/Button.vue'
 import Error from '@/components/inquiry/Error.vue'
 import {API, graphqlOperation} from 'aws-amplify'
 import {createNuxtMail} from '@/src/graphql/mutations'
+import Header from '@/components/search/Header.vue'
 
 export default defineComponent({
   name: 'Form',
@@ -104,6 +104,7 @@ export default defineComponent({
     BodyInput,
     Button,
     Error,
+    Header,
   },
   setup() {
     const { $axios } = useContext()
