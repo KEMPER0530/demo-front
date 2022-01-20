@@ -9,6 +9,13 @@
           >
             メール送信機能
           </nuxt-link>
+          <nuxt-link
+            to="/search"
+            type="button"
+            class="py-4 px-8 mt-8 text-2xl text-gray-50 bg-yellow-400 hover:bg-yellow-600 focus:ring-yellow-600 focus:ring-offset-yellow-600 text-white transition ease-in duration-200 text-center font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-full"
+          ><i class="el-icon-search"></i>
+            検索機能
+          </nuxt-link>
           <button class="py-4 px-8 mt-8 text-2xl text-gray-50 bg-red-500 hover:bg-red-600 focus:ring-red-600 focus:ring-offset-red-600 text-white transition ease-in duration-200 text-center font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-full" @click.prevent="$auth.logout()">Logout</button>
         </div>
       </div>
