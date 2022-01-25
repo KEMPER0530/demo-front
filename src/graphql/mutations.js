@@ -5,19 +5,11 @@ export const createNuxtMail = `
     $subject: String,
     $body: String,
     $createdat: String,
-    $updatedat: String,
-    $responce: Int,
-    $result: String
+    $updatedat: String
   ) {
     createNuxtMailToLambda(body: $body, from: $from, subject: $subject, to: $to,
-                           createdat: $createdat, updatedat: $updatedat, responce: $responce, result: $result)
+                           createdat: $createdat, updatedat: $updatedat)
     {
-      body
-      from
-      subject
-      to
-      createdat
-      updatedat
       responce
       result
     }

@@ -6,21 +6,14 @@
 
 type Mutation {
   createNuxtMail(input: CreateNuxtMailInput!): NuxtMail
-  createNuxtMailToLambda(body: String, createdat: String, from: String, responce: Int, result: String, subject: String, to: String, updatedat: String): NuxtMail
+  createNuxtMailToLambda(body: String, createdat: String, from: String, subject: String, to: String, updatedat: String): NuxtMail
   deleteNuxtMail(input: DeleteNuxtMailInput!): NuxtMail
   updateNuxtMail(input: UpdateNuxtMailInput!): NuxtMail
 }
 
 type NuxtMail {
-  body: String
-  createdat: String
-  from: String
-  id: ID!
   responce: Int
   result: String
-  subject: String
-  to: String
-  updatedat: String
 }
 
 type NuxtMailConnection {
@@ -52,8 +45,6 @@ input CreateNuxtMailInputToLambda {
   body: String
   createdat: String
   from: String
-  responce: Int
-  result: String
   subject: String
   to: String
   updatedat: String
