@@ -53,7 +53,7 @@ export default {
     ],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [{ src: '@/plugins/amplify.js', mode: 'client' },
+    plugins: [{ src: '@/plugins/amplify.ts', mode: 'client' },
         '~plugins/element-ui', { src: '~plugins/element-ui', ssr: false }
     ],
 
@@ -116,4 +116,26 @@ export default {
             },
         },
     },
+    storybook: {
+    // 追加のアドオン
+    // デフォルトではstorybook/addon-essentialsが含まれてます、含まれてるaddonは下記リンクを参照
+    // https://storybook.js.org/docs/react/essentials/introduction
+    addons: [],
+    // storybookのポート指定
+    port: 4000,
+    // 背景色や表示位置、デバイスの設定など
+    parameters: {
+      // 背景色：デフォルトの色を使う場合
+      backgrounds: {
+        default: 'light', // light or dark
+      },
+      // Description, Default, Controlsカラムの表示
+      controls: {
+        expanded: true,
+      },
+      // 表示位置
+      // centered:中央表示, padded:コンポーネントに余白付与, fullscreen:幅いっぱい
+      layout: 'centered',
+    },
+  },
 }

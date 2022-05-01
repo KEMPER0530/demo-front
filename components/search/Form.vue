@@ -1,76 +1,82 @@
 <template>
-  <div bg-black>
-    <el-container>
-      <el-main>
-        <el-form :inline="true" :model="searchForm" ref="searchForm" :rules="rules" @submit.native.prevent>
-          <el-form-item prop="keyword">
-            <el-input placeholder="search by keyword" prefix-icon="el-icon-search" v-model="searchForm.keyword"  @keyup.enter.native="search('searchForm')" />
-          </el-form-item>
-          <el-form-item>
-            <el-button @click="search('searchForm')">search</el-button>
-          </el-form-item>
-        </el-form>
-        <List :lists="list" :hasData="hasData" />
-      </el-main>
-    </el-container>
+  <div class="flex min-h-screen">
+    <div class="md:container md:mx-auto">
+      <div class="mx-auto my-10 bg-white p-5 rounded-md shadow-sm">
+        <form>
+          <SearchInput
+            v-model="keyword"
+            :type="'text'"
+            :placeholder="'検索内容'" />
+          <Button class="mb-6" @click="onSubmit">検索</Button>
+          <Error
+            v-if="params.keyword.$dirty && params.keyword.$anyInvalid"
+            :message="params.keyword.$message"/>
+        </form>
+        <List :lists="state.list" :hasData="state.hasData" />
+      </div>
+    </div>
   </div>
 </template>
 
-<script lang="babel">
+<script lang="ts">
+import { defineComponent, useContext, ref, reactive } from '@nuxtjs/composition-api'
 import axios from 'axios'
 import List from '~/components/search/List.vue'
+import { useValidation } from 'vue-composable'
+import SearchInput from '@/components/search/SearchInput.vue'
+import Button from '@/components/search/Button.vue'
+
 const BASE_URL = process.env.QIITA_API
-export default {
+
+export default defineComponent({
   components: {
-    List
+    List,
+    SearchInput,
+    Button,
+    Error,
   },
-  data () {
-    return {
-      searchForm: {
-        keyword: ''
+  setup() {
+    const required = (value: string | null | undefined): Boolean => !!value
+    const keyword = ref('')
+    const params = useValidation({
+      keyword: {
+        $value: keyword,
+        required,
+        $message: '検索条件を入力してください',
       },
-      rules: {
-        keyword: [
-          { required: true, message: 'Please input the keyword', trigger: 'blur' }
-        ]
-      },
+    })
+    const state = reactive({
       list: [],
-      hasData: true
-    }
-  },
-  created () {
-    this.searchForm.keyword = 'AWS'
-    this.sendRequest()
-    this.searchForm.keyword = ''
-  },
-  methods: {
-    search (form) {
-      this.$refs[form].validate((valid) => {
-        if (!valid) {
-          return false
-        }
-        this.sendRequest()
-      })
-    },
-    sendRequest () {
+      hasData: true,
+    })
+
+    const onSubmit = async (): Promise<any> => {
       axios.get(BASE_URL + 'items', {
         headers: {'Content-Type': 'application/json'},
         params: {
           page: 1,
           per_page: 20,
-          query: this.searchForm.keyword
+          query: keyword.value
         }
       })
-        .then(response => {
-          if (response.data.length === 0) {
-            this.hasData = false
-          }
-          this.list = response.data
+      .then(response => {
+        if (response.data.length === 0) {
+          state.hasData = false
+        }
+          state.list = response.data
         })
-        .catch(e => {
+      .catch(e => {
+          //@ts-ignore
           console.error('error:', e)
-        })
+      })
     }
-  }
-}
+
+    return {
+      keyword,
+      params,
+      state,
+      onSubmit,
+    }
+  },
+})
 </script>

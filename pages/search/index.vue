@@ -18,13 +18,6 @@ export default defineComponent({
   setup(){
     const isMode = computed(() => {
       return false
-      // if(process.env.MODE == 'development' ){
-      //   console.log("false");
-      //   return false;
-      // }else{
-      //   console.log("true");
-      //   return true;
-      // }
     })
 
     return{
