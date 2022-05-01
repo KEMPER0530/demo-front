@@ -49,6 +49,7 @@
         "sass": "^1.44.0",
         "sass-loader": "10",
         "ts-jest": "^27.0.3",
+        "ts-migrate": "^0.1.28",
         "vue-jest": "^3.0.4"
     }
 }
