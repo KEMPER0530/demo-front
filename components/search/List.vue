@@ -55,7 +55,7 @@ export default defineComponent({
       window.addEventListener("scroll", showScrollTop, { passive: true })
     })
 
-    const getDescription = (body) => {
+    const getDescription = (body: any) => {
       return body.slice(0, 100) + '...'
     }
 

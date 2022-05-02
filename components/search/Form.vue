@@ -1,17 +1,18 @@
 <template>
-  <div class="flex min-h-screen">
+  <div class="">
     <div class="md:container md:mx-auto">
       <div class="mx-auto my-10 bg-white p-5 rounded-md shadow-sm">
-        <form>
-          <SearchInput
-            v-model="keyword"
-            :type="'text'"
-            :placeholder="'検索内容'" />
-          <Button class="mb-6" @click="onSubmit">検索</Button>
-          <Error
-            v-if="params.keyword.$dirty && params.keyword.$anyInvalid"
-            :message="params.keyword.$message"/>
+        <form class="flex">
+              <SearchInput
+                v-model="keyword"
+                :type="'text'"
+                :placeholder="'検索内容'"
+                class="w-4/5" />
+              <Button class="ml-1 w-1/5" @click="onSubmit">検索</Button>
         </form>
+        <Error
+          v-if="params.keyword.$dirty && params.keyword.$anyInvalid"
+          :message="params.keyword.$message"/>
         <List :lists="state.list" :hasData="state.hasData" />
       </div>
     </div>
@@ -25,6 +26,7 @@ import List from '~/components/search/List.vue'
 import { useValidation } from 'vue-composable'
 import SearchInput from '@/components/search/SearchInput.vue'
 import Button from '@/components/search/Button.vue'
+import Error from '@/components/search/Error.vue'
 
 const BASE_URL = process.env.QIITA_API
 

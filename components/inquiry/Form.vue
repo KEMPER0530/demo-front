@@ -180,6 +180,7 @@ export default defineComponent({
         }
       }catch(error){
         console.error(error)
+        // @ts-ignore
         alert("メール送信に失敗しました: " + error.errors[0].message)
       }
     }

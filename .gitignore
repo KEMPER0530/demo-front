@@ -92,5 +92,6 @@ sw.*
 # configure file
 .env
 
+# storybook
 .nuxt-storybook
 storybook-static
