@@ -4087,7 +4087,7 @@
 
 "@nuxtjs/storybook@^4.3.1":
   version "4.3.1"
-  resolved "https://registry.npmjs.org/@nuxtjs/storybook/-/storybook-4.3.1.tgz"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/storybook/-/storybook-4.3.1.tgz#548cad23ad86094e843a63d3d2e11dda32415f4c"
   integrity sha512-LqOywyRPEt1Fsvax76ABcTYjOUpMvitwOBM9uM0pcHgbU0KQVYRKP3qEdcobA/4ptGlq0l/DK8hpL7cmWDYLag==
   dependencies:
     "@nuxt/devalue" "^2.0.0"
@@ -4187,7 +4187,7 @@
   resolved "https://registry.npmjs.org/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
-"@storybook/addon-actions@6.4.22", "@storybook/addon-actions@^6.4.22":
+"@storybook/addon-actions@6.4.22":
   version "6.4.22"
   resolved "https://registry.npmjs.org/@storybook/addon-actions/-/addon-actions-6.4.22.tgz"
   integrity sha512-t2w3iLXFul+R/1ekYxIEzUOZZmvEa7EzUAVAuCHP4i6x0jBnTTZ7sAIUVRaxVREPguH5IqI/2OklYhKanty2Yw==
@@ -4300,7 +4300,7 @@
     ts-dedent "^2.0.0"
     util-deprecate "^1.0.2"
 
-"@storybook/addon-essentials@^6.4.22", "@storybook/addon-essentials@~6.4.19":
+"@storybook/addon-essentials@~6.4.19":
   version "6.4.22"
   resolved "https://registry.npmjs.org/@storybook/addon-essentials/-/addon-essentials-6.4.22.tgz"
   integrity sha512-GTv291fqvWq2wzm7MruBvCGuWaCUiuf7Ca3kzbQ/WqWtve7Y/1PDsqRNQLGZrQxkXU0clXCqY1XtkTrtA3WGFQ==
@@ -4317,24 +4317,6 @@
     "@storybook/api" "6.4.22"
     "@storybook/node-logger" "6.4.22"
     core-js "^3.8.2"
-    regenerator-runtime "^0.13.7"
-    ts-dedent "^2.0.0"
-
-"@storybook/addon-links@^6.4.22":
-  version "6.4.22"
-  resolved "https://registry.yarnpkg.com/@storybook/addon-links/-/addon-links-6.4.22.tgz#c0ed9e9ef6505cf1562e1476bbc5064c82dadbe2"
-  integrity sha512-OSOyDnTXnmcplJHlXTYUTMkrfpLqxtHp2R69IXfAyI1e8WNDb79mXflrEXDA/RSNEliLkqYwCyYby7gDMGds5Q==
-  dependencies:
-    "@storybook/addons" "6.4.22"
-    "@storybook/client-logger" "6.4.22"
-    "@storybook/core-events" "6.4.22"
-    "@storybook/csf" "0.0.2--canary.87bc651.0"
-    "@storybook/router" "6.4.22"
-    "@types/qs" "^6.9.5"
-    core-js "^3.8.2"
-    global "^4.4.0"
-    prop-types "^15.7.2"
-    qs "^6.10.0"
     regenerator-runtime "^0.13.7"
     ts-dedent "^2.0.0"
 
@@ -5003,7 +4985,7 @@
     resolve-from "^5.0.0"
     store2 "^2.12.0"
 
-"@storybook/vue@^6.4.22", "@storybook/vue@~6.4.19":
+"@storybook/vue@~6.4.19":
   version "6.4.22"
   resolved "https://registry.npmjs.org/@storybook/vue/-/vue-6.4.22.tgz"
   integrity sha512-UxkO4QM9zagL42eWW+z04LNOyjuaxzzI5EKA5Lhgrw3Ltm6l8ViOrvwiWRoVTk2X57trn+/NBlu1u6u+GLpaXQ==
@@ -6631,19 +6613,9 @@ babel-jest@^27.0.5, babel-jest@^27.4.2:
     graceful-fs "^4.2.4"
     slash "^3.0.0"
 
-babel-loader@^8.0.0, babel-loader@^8.2.2:
-  version "8.2.3"
-  resolved "https://registry.npmjs.org/babel-loader/-/babel-loader-8.2.3.tgz"
-  integrity sha512-n4Zeta8NC3QAsuyiizu0GkmRcQ6clkV9WFUnUf1iXP//IeSKbWjofW3UHyZVwlOB4y039YQKefawyTn64Zwbuw==
-  dependencies:
-    find-cache-dir "^3.3.1"
-    loader-utils "^1.4.0"
-    make-dir "^3.1.0"
-    schema-utils "^2.6.5"
-
-babel-loader@^8.2.5:
+babel-loader@^8.0.0, babel-loader@^8.2.2, babel-loader@^8.2.5:
   version "8.2.5"
-  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-8.2.5.tgz#d45f585e654d5a5d90f5350a779d7647c5ed512e"
+  resolved "https://registry.npmjs.org/babel-loader/-/babel-loader-8.2.5.tgz"
   integrity sha512-OSiFfH89LrEMiWd4pLNqGz4CwJDtbs2ZVc+iGu2HrkRfPxId9F2anQj38IxWpmRfsUY0aBZYi1EFcd3mhtRMLQ==
   dependencies:
     find-cache-dir "^3.3.1"
@@ -7926,10 +7898,10 @@ core-js@^2.4.0, core-js@^2.6.5:
   resolved "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
-core-js@^3.0.4, core-js@^3.22.3, core-js@^3.6.5, core-js@^3.8.2:
-  version "3.22.3"
-  resolved "https://registry.npmjs.org/core-js/-/core-js-3.22.3.tgz"
-  integrity sha512-1t+2a/d2lppW1gkLXx3pKPVGbBdxXAkqztvWb1EJ8oF8O2gIGiytzflNiFEehYwVK/t2ryUsGBoOFFvNx95mbg==
+core-js@^3.0.4, core-js@^3.22.4, core-js@^3.6.5, core-js@^3.8.2:
+  version "3.22.4"
+  resolved "https://registry.npmjs.org/core-js/-/core-js-3.22.4.tgz"
+  integrity sha512-1uLykR+iOfYja+6Jn/57743gc9n73EWiOnSJJ4ba3B4fOEYDBv25MagmEZBxTp5cWq4b/KPx/l77zgsp28ju4w==
 
 core-util-is@~1.0.0:
   version "1.0.3"
@@ -12391,7 +12363,7 @@ loader-utils@2.0.0:
     emojis-list "^3.0.0"
     json5 "^2.1.2"
 
-loader-utils@^1.0.2, loader-utils@^1.1.0, loader-utils@^1.2.3, loader-utils@^1.4.0:
+loader-utils@^1.0.2, loader-utils@^1.1.0, loader-utils@^1.2.3:
   version "1.4.0"
   resolved "https://registry.npmjs.org/loader-utils/-/loader-utils-1.4.0.tgz"
   integrity sha512-qH0WSMBtn/oHuwjy/NucEgbx5dbxxnxup9s4PVXJUDHZBQY+s0NWA9rJf53RBnQZxfch7euUui7hpoAPvALZdA==
@@ -14736,9 +14708,18 @@ postcss@7.x.x, postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.17,
     picocolors "^0.2.1"
     source-map "^0.6.1"
 
-postcss@^8.1.10, postcss@^8.1.6, postcss@^8.2.15, postcss@^8.3.5, postcss@^8.4.13, postcss@^8.4.7:
+postcss@^8.1.10, postcss@^8.1.6, postcss@^8.2.15, postcss@^8.3.5, postcss@^8.4.7:
   version "8.4.13"
   resolved "https://registry.npmjs.org/postcss/-/postcss-8.4.13.tgz"
+  integrity sha512-jtL6eTBrza5MPzy8oJLFuUscHDXTV5KcLlqAWHl5q5WYRfnNRGSmOZmOZ1T6Gy7A99mOZfqungmZMpMmCVJ8ZA==
+  dependencies:
+    nanoid "^3.3.3"
+    picocolors "^1.0.0"
+    source-map-js "^1.0.2"
+
+postcss@^8.4.13:
+  version "8.4.13"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.13.tgz#7c87bc268e79f7f86524235821dfdf9f73e5d575"
   integrity sha512-jtL6eTBrza5MPzy8oJLFuUscHDXTV5KcLlqAWHl5q5WYRfnNRGSmOZmOZ1T6Gy7A99mOZfqungmZMpMmCVJ8ZA==
   dependencies:
     nanoid "^3.3.3"

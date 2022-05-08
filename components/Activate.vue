@@ -18,7 +18,6 @@
         <button class="activate-button" @click="activate" >Activate</button>
       </div>
       <div class="form-footer">
-        <!-- <nuxt-link to="/signin">sign in</nuxt-link> -->
       </div>
     </div>
   </div>

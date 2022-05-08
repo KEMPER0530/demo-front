@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="form-footer">
-        <nuxt-link to="/signin">sign in</nuxt-link>
+        <nuxt-link to="/auth/signin">sign in</nuxt-link>
       </div>
     </div>
   </div>

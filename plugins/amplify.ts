@@ -3,6 +3,7 @@ import Amplify, * as AmplifyModules from 'aws-amplify'
 // @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'aws-... Remove this comment to see the full error message
 import { AmplifyPlugin, components } from 'aws-amplify-vue'
 import Auth from '@aws-amplify/auth';
+// @ts-ignore
 import awsconfig from '@/src/appsync-exports'
 
 export default () => {

@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="form-footer">
-      <nuxt-link to="/signup">Create an account</nuxt-link>
+      <nuxt-link to="/auth/signup">Create an account</nuxt-link>
     </div>
   </div>
 </template>

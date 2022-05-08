@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config();
 const awsmobile = {
     aws_project_region: process.env.AWS_APPSYNC_REIGION,
     aws_appsync_graphqlEndpoint: process.env.AWS_APPSYNC_GRAPHQL_ENDPOINT,
