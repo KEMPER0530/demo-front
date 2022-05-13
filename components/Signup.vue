@@ -1,6 +1,6 @@
 <template>
   <div class="form-wrapper">
-    <Activate v-if="isSignupped" :signname="email" />
+    <Activate v-if="isSignupped" :_email="email" />
     <div v-if="!isSignupped">
       <h1><b>Sign up</b></h1>
       <div>
@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="form-footer">
-        <nuxt-link to="/auth/signin">sign in</nuxt-link>
+        <nuxt-link to="/signin">sign in</nuxt-link>
       </div>
     </div>
   </div>
@@ -38,10 +38,25 @@ export default defineComponent({
     Activate,
     Error,
   },
-  setup() {
-    const email = ref('')
-    const password = ref('')
-    const isSignupped = ref(false)
+  props: {
+    _email: {
+      type: String,
+      required: false,
+    },
+    _password: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    _isSignupped:  {
+      type: Boolean,
+      required: false,
+    },
+  },
+  setup(props) {
+    let email = ref(props._email)
+    let password = ref(props._password)
+    let isSignupped = ref(props._isSignupped)
 
     const required = (value: string | null | undefined): Boolean => !!value
     const mailAdressFormat = (value: string | null | undefined): Boolean =>
@@ -79,11 +94,13 @@ export default defineComponent({
           const attributeList: CognitoUserAttribute[] = [];
           const attributeUserNickName = new CognitoUserAttribute({
             Name: "email",
+            // @ts-ignore
             Value: email.value,
           });
           attributeList.push(attributeUserNickName);
 
           // 入力したユーザー情報をもとに登録処理を実施
+          // @ts-ignore
           await userPool.signUp(email.value,password.value,attributeList,[],function (err,result) {
               // エラー時
               if (err) {

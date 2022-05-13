@@ -33,17 +33,28 @@ import { CognitoUserPool,CognitoUser } from 'amazon-cognito-identity-js'
 export default defineComponent({
   name: 'Signup',
   props: {
-    signname: String,
+    _email:  {
+      type: String,
+      required: false,
+    },
+    _activatecode:  {
+      type: String,
+      required: false,
+      default: '',
+    },
+    _isSignupped:  {
+      type: Boolean,
+      required: false,
+    },
   },
   components: {
     Signupped,
     Error,
   },
   setup(props) {
-    let _email = props.signname
-    const email = ref(_email)
-    const activatecode = ref('')
-    const isSignupped = ref(false)
+    const email = ref(props._email)
+    const activatecode = ref(props._activatecode)
+    const isSignupped = ref(props._isSignupped)
 
     const required = (value: string | null | undefined): Boolean => !!value
     const mailAdressFormat = (value: string | null | undefined): Boolean =>

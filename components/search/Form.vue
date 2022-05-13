@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <div class="md:container md:mx-auto">
       <div class="mx-auto my-10 bg-white p-5 rounded-md shadow-sm">
         <form class="flex">
@@ -37,9 +37,16 @@ export default defineComponent({
     Button,
     Error,
   },
-  setup() {
+  props: {
+    _keyword: {
+      type: String,
+      required: false,
+      default: '',
+    },
+  },
+  setup(props) {
     const required = (value: string | null | undefined): Boolean => !!value
-    const keyword = ref('')
+    const keyword = ref(props._keyword)
     const params = useValidation({
       keyword: {
         $value: keyword,

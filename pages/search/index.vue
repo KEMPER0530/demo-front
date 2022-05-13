@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <ENavbar v-if="isMode"></ENavbar> -->
     <Navbar v-if="!isMode"></Navbar>
   </div>
 </template>

@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="form-footer">
-      <nuxt-link to="/auth/signup">Create an account</nuxt-link>
+      <nuxt-link to="/signup">Create an account</nuxt-link>
     </div>
   </div>
 </template>
@@ -24,9 +24,21 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  data: () => ({
-    email: '' as string,
-    password: '' as string,
+  props: {
+    _email: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    _password: {
+      type: String,
+      required: false,
+      default: '',
+    },
+  },
+  data: (props: any) => ({
+    email: props._email,
+    password: props._password,
   }),
   head() {
     return {
@@ -35,7 +47,9 @@ export default Vue.extend({
   methods: {
     async signin() {
       // try {
+        // @ts-ignore
         const username = this.email;
+        // @ts-ignore
         const password  = this.password;
         await this.$auth.loginWith('cognito', {
           data: {

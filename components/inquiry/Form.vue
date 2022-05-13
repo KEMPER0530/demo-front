@@ -106,13 +106,40 @@ export default defineComponent({
     Error,
     Header,
   },
-  setup() {
+  props: {
+    _from: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    _to: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    _subject: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    _body: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    _isSubmited: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  setup(props) {
     const { $axios } = useContext()
-    const from = ref('')
-    const to = ref('')
-    const subject = ref('')
-    const body = ref('')
-    const isSubmited = ref(false)
+    const from = ref(props._from)
+    const to = ref(props._to)
+    const subject = ref(props._subject)
+    const body = ref(props._body)
+    const isSubmited = ref(props._isSubmited)
 
     const required = (value: string | null | undefined): Boolean => !!value
     const mailAdressFormat = (value: string | null | undefined): Boolean =>
