@@ -91,3 +91,5 @@ sw.*
 
 # configure file
 .env
+.vscode
+.nuxt-storybook

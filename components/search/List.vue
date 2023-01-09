@@ -4,7 +4,7 @@
     <i class="el-icon-warning">&nbsp;No results found for your keyword.</i>
   </div>
   <div v-else>
-    <el-col :span="6" v-for="(element, index) in lists" :key="index" class="col-style">
+    <el-col :span="colSpan" v-for="(element, index) in lists" :key="index" class="col-style">
       <el-card :body-style="{ padding: '15px' }" class="box-card">
         <div slot="header" class="clearfix">
           <a class="list-link" :href="element.url" target="_blank">{{ element.title }}</a>
@@ -45,11 +45,14 @@ export default {
   props: ['lists', 'hasData'],
   data () {
     return {
-      scrollY: 0
+      scrollY: 0,
+      colSpan: 10
     }
   },
   mounted () {
     window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('resize', this.handleResize)
+    this.handleResize()
   },
   methods: {
     getDescription: function (body) {
@@ -61,7 +64,18 @@ export default {
     scrollTop: function () {
       document.body.scrollTop = 0
       document.documentElement.scrollTop = 0
-    }
+    },
+    handleResize () {
+      if (window.innerWidth < 768) {
+        this.colSpan = 26
+      } else if (window.innerWidth < 1025) {
+        this.colSpan = 12
+      } else if (window.innerWidth < 1217) {
+        this.colSpan = 8
+      } else {
+        this.colSpan = 6
+      }
+    },
   }
 }
 </script>
