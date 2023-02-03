@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="my-3 text-center text-3xl font-semibold text-gray-700"><nuxt-link to="/">ChatGPT デモ</nuxt-link></h1>
+    <h1 class="my-3 text-center text-3xl font-semibold text-gray-700"><nuxt-link to="/">OpenAI デモ</nuxt-link></h1>
     <div class="bg-gray-200 p-4 rounded-lg max-w-screen-md mx-auto">
         <div class="mb-4">
           <textarea class="p-2 border rounded w-full text-black" v-model="inputText"></textarea>
@@ -13,7 +13,6 @@
       <div class="text-left text-gray-700">
         <div class="text-sm text-gray-500 mb-2">{{ result.date }}</div>
          {{ result.text }}
-        </div>
       </div>
     </div>
   </div>

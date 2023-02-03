@@ -21,7 +21,7 @@
             type="button"
             class="py-4 px-8 mt-8 text-2xl text-gray-50 bg-blue-400 hover:bg-blue-600 focus:ring-blue-600 focus:ring-offset-blue-600 text-white transition ease-in duration-200 text-center font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-full"
           ><i class="el-icon-search"></i>
-            ChatGpt
+            OpenAI
           </nuxt-link>
           <button class="py-4 px-8 mt-8 text-2xl text-gray-50 bg-red-500 hover:bg-red-600 focus:ring-red-600 focus:ring-offset-red-600 text-white transition ease-in duration-200 text-center font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-full" @click.prevent="$auth.logout()">Logout</button>
         </div>
