@@ -1,14 +1,14 @@
 <template>
-  <Navbar></Navbar>
+    <Chatform></Chatform>
 </template>
 
 <script lang="ts">
 import { computed,defineComponent } from '@nuxtjs/composition-api'
-import Navbar from '@/components/search/Navbar.vue'
+import Chatform from '@/components/gpt/Chatform.vue'
 
 export default defineComponent({
   components: {
-    Navbar,
+    Chatform,
   },
 })
 </script>

@@ -1,5 +1,5 @@
 export const createNuxtMail = `
-  mutation createNuxtMailToLambda(
+  mutation createNuxtMail(
     $from: String,
     $to: String,
     $subject: String,
@@ -7,10 +7,21 @@ export const createNuxtMail = `
     $createdat: String,
     $updatedat: String
   ) {
-    createNuxtMailToLambda(body: $body, from: $from, subject: $subject, to: $to,
+    createNuxtMail(body: $body, from: $from, subject: $subject, to: $to,
                            createdat: $createdat, updatedat: $updatedat)
     {
-      responce
+      response
+      result
+    }
+  }`;
+
+export const createChatGpt = `
+  mutation createChatGpt(
+    $prompt: String
+  ) {
+    createChatGpt(prompt: $prompt)
+    {
+      response
       result
     }
   }`;

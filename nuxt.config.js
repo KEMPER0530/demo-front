@@ -7,7 +7,9 @@ const {
     AWS_COGNITO_USERPOOLID,
     AWS_COGNITO_USERPOOLWEBCLIENTID,
     MODE,
-    QIITA_API
+    QIITA_API,
+    CHATGPT_API_KEY,
+    CHAT_GPT_API_URL,
 } = process.env
 
 export default {
@@ -20,7 +22,9 @@ export default {
         AWS_COGNITO_USERPOOLID,
         AWS_COGNITO_USERPOOLWEBCLIENTID,
         MODE,
-        QIITA_API
+        QIITA_API,
+        CHATGPT_API_KEY,
+        CHAT_GPT_API_URL
     },
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,

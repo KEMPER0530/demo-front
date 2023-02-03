@@ -19,7 +19,7 @@
 <script lang="babel">
 import axios from 'axios'
 import List from '~/components/search/List.vue'
-const BASE_URL = process.env.QIITA_API
+
 export default {
   components: {
     List
@@ -53,7 +53,7 @@ export default {
       })
     },
     sendRequest () {
-      axios.get(BASE_URL + 'items', {
+      axios.get(`${process.env.QIITA_API}` + 'items', {
         headers: {'Content-Type': 'application/json'},
         params: {
           page: 1,

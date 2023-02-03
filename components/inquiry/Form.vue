@@ -159,18 +159,16 @@ export default defineComponent({
                   body: body.value,
                   createdat: date,
                   updatedat: date,
-                  responce: 0,
-                  result: ""
                 })
               )
           // @ts-ignore
-          console.log(result.data.createNuxtMailToLambda.responce)
+          console.log(result.data.createNuxtMail.response)
           // @ts-ignore
-          if(result.data.createNuxtMailToLambda.responce === 200 ){
+          if(result.data.createNuxtMail.response === 200 ){
             isSubmited.value = true
           }else{
             // @ts-ignore
-            console.log(result.data.createNuxtMailToLambda.responce + " / " + result.data.createNuxtMailToLambda.result)
+            console.log(result.data.createNuxtMail.response + " : " + result.data.createNuxtMail.result)
             alert("メール送信に失敗しました")
           }
         return result

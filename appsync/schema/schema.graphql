@@ -4,15 +4,30 @@
   subscription: Subscription
 }
 
+type ChatGpt {
+  response: Int
+  result: String
+}
+
+type ChatGptConnection {
+  items: [ChatGpt]
+  nextToken: String
+}
+
 type Mutation {
-  createNuxtMail(input: CreateNuxtMailInput!): NuxtMail
-  createNuxtMailToLambda(body: String, createdat: String, from: String, subject: String, to: String, updatedat: String): NuxtMail
-  deleteNuxtMail(input: DeleteNuxtMailInput!): NuxtMail
-  updateNuxtMail(input: UpdateNuxtMailInput!): NuxtMail
+  createChatGpt(prompt: String): ChatGpt
+  createNuxtMail(
+    body: String
+    createdat: String
+    from: String
+    subject: String
+    to: String
+    updatedat: String
+  ): NuxtMail
 }
 
 type NuxtMail {
-  responce: Int
+  response: Int
   result: String
 }
 
@@ -23,85 +38,16 @@ type NuxtMailConnection {
 
 type Query {
   getNuxtMail(id: ID!): NuxtMail
-  listNuxtMails(filter: TableNuxtMailFilterInput, limit: Int, nextToken: String): NuxtMailConnection
+  listNuxtMails(
+    filter: TableStringFilterInput
+    limit: Int
+    nextToken: String
+  ): NuxtMailConnection
 }
 
 type Subscription {
-  onCreateNuxtMail(body: String, from: String, id: ID, subject: String, to: String): NuxtMail @aws_subscribe(mutations : ["createNuxtMail"])
-  onDeleteNuxtMail(body: String, from: String, id: ID, subject: String, to: String): NuxtMail @aws_subscribe(mutations : ["deleteNuxtMail"])
-  onUpdateNuxtMail(body: String, from: String, id: ID, subject: String, to: String): NuxtMail @aws_subscribe(mutations : ["updateNuxtMail"])
-}
-
-input CreateNuxtMailInput {
-  body: String
-  createdat: String
-  from: String
-  subject: String
-  to: String
-  updatedat: String
-}
-
-input CreateNuxtMailInputToLambda {
-  body: String
-  createdat: String
-  from: String
-  subject: String
-  to: String
-  updatedat: String
-}
-
-input DeleteNuxtMailInput {
-  id: ID!
-}
-
-input TableBooleanFilterInput {
-  eq: Boolean
-  ne: Boolean
-}
-
-input TableFloatFilterInput {
-  between: [Float]
-  contains: Float
-  eq: Float
-  ge: Float
-  gt: Float
-  le: Float
-  lt: Float
-  ne: Float
-  notContains: Float
-}
-
-input TableIDFilterInput {
-  beginsWith: ID
-  between: [ID]
-  contains: ID
-  eq: ID
-  ge: ID
-  gt: ID
-  le: ID
-  lt: ID
-  ne: ID
-  notContains: ID
-}
-
-input TableIntFilterInput {
-  between: [Int]
-  contains: Int
-  eq: Int
-  ge: Int
-  gt: Int
-  le: Int
-  lt: Int
-  ne: Int
-  notContains: Int
-}
-
-input TableNuxtMailFilterInput {
-  body: TableStringFilterInput
-  from: TableStringFilterInput
-  id: TableIDFilterInput
-  subject: TableStringFilterInput
-  to: TableStringFilterInput
+  onCreateNuxtMail(body: String, id: ID): NuxtMail
+    @aws_subscribe(mutations: ["createNuxtMail"])
 }
 
 input TableStringFilterInput {
@@ -115,14 +61,4 @@ input TableStringFilterInput {
   lt: String
   ne: String
   notContains: String
-}
-
-input UpdateNuxtMailInput {
-  body: String
-  createdat: String
-  from: String
-  id: ID!
-  subject: String
-  to: String
-  updatedat: String
 }
