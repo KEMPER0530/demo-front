@@ -1,5 +1,5 @@
 <template>
   <div class="header">
-    <b><nuxt-link to="/">検索機能(Qiita) </nuxt-link></b>
+    <b><nuxt-link to="/">Qiita記事</nuxt-link></b>
   </div>
 </template>
