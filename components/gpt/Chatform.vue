@@ -31,7 +31,7 @@ export default defineComponent({
     const generateResponse = async () => {
       try {
         const { data } = await axios.post(`${process.env.CHAT_GPT_API_URL}`, {
-          model: 'text-davinci-003',
+          model: 'gpt-3.5-turbo',
           prompt: inputText.value,
           temperature: 0.7,
           max_tokens: 2000,
