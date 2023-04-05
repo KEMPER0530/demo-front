@@ -19,37 +19,40 @@
 </template>
 
 <script lang="ts">
-import axios from 'axios'
+import axios from 'axios';
 import { defineComponent, ref } from '@nuxtjs/composition-api';
 
 export default defineComponent({
   name: 'ChatGptComponent',
   setup() {
     const inputText = ref('');
-    const results = ref<{ date: string; text: string; }[]>([]);
+    const results = ref<{ date: string; text: string }[]>([]);
 
     const generateResponse = async () => {
       try {
-        const { data } = await axios.post(`${process.env.CHAT_GPT_API_URL}`, {
-          model: 'gpt-3.5-turbo',
-          prompt: inputText.value,
-          temperature: 0.7,
-          max_tokens: 2000,
-          top_p: 1,
-          frequency_penalty: 0,
-          presence_penalty: 0,
-          stream: false
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.CHATGPT_API_KEY}`,
+        const { data } = await axios.post(
+          `${process.env.CHAT_GPT_API_URL}`,
+          {
+            model: 'gpt-3.5-turbo',
+            messages: [
+              {
+                role: 'user',
+                content: inputText.value,
+              },
+            ],
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${process.env.CHATGPT_API_KEY}`,
+            },
           }
-        });
-        const text = data.choices[0].text;
+        );
+        const text = data.choices[0].message.content;
         const date = new Date().toLocaleString();
         results.value.unshift({ date, text });
       } catch (error) {
-        alert(error)
+        alert(error);
       }
     };
 
