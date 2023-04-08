@@ -6,7 +6,7 @@
           <textarea class="p-2 border rounded w-full text-black" v-model="inputText"></textarea>
         </div>
         <div class="text-center">
-          <button class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600" @click="generateResponse">Generate Response</button>
+          <button :disabled="isLoading" :class="isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'" class="text-white py-2 px-4 rounded-lg" @click="generateResponse">Generate Response</button>
         </div>
     </div>
     <div :class="result.role === 'user' ? 'bg-blue-50 p-4 rounded-lg max-w-screen-md mx-auto shadow mb-4' : 'bg-green-50 p-4 rounded-lg max-w-screen-md mx-auto shadow mb-4'" v-for="(result, index) in results" :key="index">
@@ -32,8 +32,10 @@ export default defineComponent({
   setup() {
     const inputText = ref('');
     const results = ref<{ date: string; text: string; role: string }[]>([]);
+    const isLoading = ref(false);
 
     const generateResponse = async () => {
+      isLoading.value = true;
       try {
         const questionText = inputText.value;
         const questionDate = new Date().toLocaleString();
@@ -62,10 +64,12 @@ export default defineComponent({
         results.value.unshift({ date, text, role: 'ai' });
       } catch (error) {
         alert(error);
+      } finally {
+        isLoading.value = false;
       }
     };
 
-    return { inputText, results, generateResponse };
+    return { inputText, results, generateResponse, isLoading };
   },
 });
 </script>
