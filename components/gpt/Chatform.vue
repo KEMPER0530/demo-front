@@ -6,7 +6,14 @@
           <textarea class="p-2 border rounded w-full text-black" v-model="inputText"></textarea>
         </div>
         <div class="text-center">
-          <button :disabled="isLoading" :class="isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'" class="text-white py-2 px-4 rounded-lg" @click="generateResponse">Generate Response</button>
+          <button v-if="!isLoading" :disabled="isLoading" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg" @click="generateResponse">Generate Response</button>
+          <div v-if="isLoading" class="loading inline-block">
+            <div class="flex items-center justify-center">
+              <div class="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-1"></div>
+              <div class="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-1"></div>
+              <div class="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-1"></div>
+            </div>
+          </div>
         </div>
     </div>
     <div :class="result.role === 'user' ? 'bg-blue-50 p-4 rounded-lg max-w-screen-md mx-auto shadow mb-4' : 'bg-green-50 p-4 rounded-lg max-w-screen-md mx-auto shadow mb-4'" v-for="(result, index) in results" :key="index">
@@ -16,7 +23,7 @@
           <strong>You:</strong> {{ result.text }}
         </div>
         <div v-else>
-          <strong>AI:</strong> {{ result.text }}
+          <strong>AI:</strong> <span v-html="result.text" />
         </div>
       </div>
     </div>
@@ -26,13 +33,31 @@
 <script lang="ts">
 import axios from 'axios';
 import { defineComponent, ref } from '@nuxtjs/composition-api';
-
 export default defineComponent({
   name: 'ChatGptComponent',
   setup() {
     const inputText = ref('');
     const results = ref<{ date: string; text: string; role: string }[]>([]);
     const isLoading = ref(false);
+
+    const renderText = async (text: string) => {
+      const typeContent = text.replace(/\n/g, '<br>');
+      const typeSprit = typeContent.split('');
+      const typeSpeed = 50;
+      let typeLength = 0;
+
+      return new Promise((resolve) => {
+        const typeInterval = setInterval(() => {
+          if (typeSprit[typeLength] == undefined) {
+            clearInterval(typeInterval);
+            resolve('');
+          } else {
+            results.value[0].text += typeSprit[typeLength];
+            typeLength++;
+          }
+        }, typeSpeed);
+      });
+    };
 
     const generateResponse = async () => {
       isLoading.value = true;
@@ -59,9 +84,11 @@ export default defineComponent({
             },
           }
         );
+
         const text = data.choices[0].message.content;
         const date = new Date().toLocaleString();
-        results.value.unshift({ date, text, role: 'ai' });
+        results.value.unshift({ date, text: '', role: 'ai' });
+        await renderText(text);
       } catch (error) {
         alert(error);
       } finally {
