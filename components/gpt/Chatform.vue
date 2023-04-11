@@ -3,15 +3,15 @@
     <h1 class="my-3 text-center text-3xl font-semibold text-gray-700"><nuxt-link to="/">OpenAI デモ</nuxt-link></h1>
     <div class="bg-gray-200 p-4 rounded-lg max-w-screen-md mx-auto">
         <div class="mb-4">
-          <textarea class="p-2 border rounded w-full text-black" v-model="inputText"></textarea>
+          <textarea class="p-2 border rounded w-full text-black" v-model="inputText" placeholder="Send a message..."></textarea>
         </div>
         <div class="text-center">
-          <button v-if="!isLoading" :disabled="isLoading" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg" @click="generateResponse">Generate Response</button>
+          <button v-if="!isLoading" :disabled="!isInputValid()" :class="!isInputValid() ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'" class="text-white py-2 px-4 rounded-lg" @click="generateResponse">Generate Response</button>
           <div v-if="isLoading" class="loading inline-block">
             <div class="flex items-center justify-center">
-              <div class="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-1"></div>
-              <div class="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-1"></div>
-              <div class="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-1"></div>
+              <div class="w-10 h-10 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-1"></div>
+              <div class="w-10 h-10 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-1"></div>
+              <div class="w-10 h-10 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-1"></div>
             </div>
           </div>
         </div>
@@ -40,6 +40,10 @@ export default defineComponent({
     const results = ref<{ date: string; text: string; role: string }[]>([]);
     const isLoading = ref(false);
 
+    const isInputValid = () => {
+      return inputText.value.trim().length > 0;
+    };
+
     const renderText = async (text: string) => {
       const typeContent = text.replace(/\n/g, '<br>');
       const typeSprit = typeContent.split('');
@@ -65,6 +69,7 @@ export default defineComponent({
         const questionText = inputText.value;
         const questionDate = new Date().toLocaleString();
         results.value.unshift({ date: questionDate, text: questionText, role: 'user' });
+        inputText.value = ''
 
         const { data } = await axios.post(
           `${process.env.CHAT_GPT_API_URL}`,
@@ -73,7 +78,7 @@ export default defineComponent({
             messages: [
               {
                 role: 'user',
-                content: inputText.value,
+                content: questionText,
               },
             ],
           },
@@ -96,7 +101,7 @@ export default defineComponent({
       }
     };
 
-    return { inputText, results, generateResponse, isLoading };
+    return { inputText, results, isInputValid, generateResponse, isLoading };
   },
 });
 </script>
