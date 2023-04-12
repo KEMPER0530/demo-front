@@ -51,31 +51,32 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/aws-rough
-      - aws-s3/sync:
-          arguments: |
-            --cache-control "max-age=86400"
-          from: ./dist/
-          to: 's3://${BACKET_NAME}'
       - run:
           name: Create .env file
           command: |
             echo "MODE=$MODE" > .env
-            echo "QIITA_API=$QIITA_API" >> .env
-            echo "AWS_APPSYNC_REIGION=$AWS_APPSYNC_REIGION" >> .env
-            echo "AWS_APPSYNC_GRAPHQL_ENDPOINT=$AWS_APPSYNC_GRAPHQL_ENDPOINT" >> .env
-            echo "AWS_APPSYNC_AUTHENTICATION_TYPE=$AWS_APPSYNC_AUTHENTICATION_TYPE" >> .env
-            echo "AWS_APPSYNC_APIKEY=$AWS_APPSYNC_APIKEY" >> .env
-            echo "AWS_COGNITO_REIGION=$AWS_COGNITO_REIGION" >> .env
-            echo "AWS_COGNITO_USERPOOLID=$AWS_COGNITO_USERPOOLID" >> .env
-            echo "AWS_COGNITO_USERPOOLWEBCLIENTID=$AWS_COGNITO_USERPOOLWEBCLIENTID" >> .env
-            echo "CHAT_GPT_API_URL=$CHAT_GPT_API_URL" >> .env
-            echo "CHATGPT_API_KEY=$CHATGPT_API_KEY" >> .env
-            echo "CHAT_GPT_MODEL=$CHAT_GPT_MODEL" >> .env
+            echo "QIITA_API='$QIITA_API" >> .env
+            echo "AWS_APPSYNC_REIGION='$AWS_APPSYNC_REIGION'" >> .env
+            echo "AWS_APPSYNC_GRAPHQL_ENDPOINT='$AWS_APPSYNC_GRAPHQL_ENDPOINT'" >> .env
+            echo "AWS_APPSYNC_AUTHENTICATION_TYPE='$AWS_APPSYNC_AUTHENTICATION_TYPE'" >> .env
+            echo "AWS_APPSYNC_APIKEY='$AWS_APPSYNC_APIKEY'" >> .env
+            echo "AWS_COGNITO_REIGION='$AWS_COGNITO_REIGION'" >> .env
+            echo "AWS_COGNITO_USERPOOLID='$AWS_COGNITO_USERPOOLID'" >> .env
+            echo "AWS_COGNITO_USERPOOLWEBCLIENTID='$AWS_COGNITO_USERPOOLWEBCLIENTID'" >> .env
+            echo "CHAT_GPT_API_URL='$CHAT_GPT_API_URL'" >> .env
+            echo "CHATGPT_API_KEY='$CHATGPT_API_KEY'" >> .env
+            echo "CHAT_GPT_MODEL='$CHAT_GPT_MODEL'" >> .env
       - aws-s3/copy:
           from: .env
           to: 's3://${BACKET_NAME}/.env'
           arguments: |
             --cache-control "max-age=86400"
+      - aws-s3/sync:
+          arguments: |
+            --cache-control "max-age=86400"
+          from: ./dist/
+          to: 's3://${BACKET_NAME}'
+
 
 workflows:
   version: 2
