@@ -54,7 +54,7 @@ jobs:
       - run:
           name: Create .env file
           command: |
-            echo "MODE=$MODE" > .env
+            echo "MODE='$MODE'" > .env
             echo "QIITA_API='$QIITA_API" >> .env
             echo "AWS_APPSYNC_REIGION='$AWS_APPSYNC_REIGION'" >> .env
             echo "AWS_APPSYNC_GRAPHQL_ENDPOINT='$AWS_APPSYNC_GRAPHQL_ENDPOINT'" >> .env
