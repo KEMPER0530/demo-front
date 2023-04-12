@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1 class="my-3 text-center text-3xl font-semibold text-gray-700"><nuxt-link to="/">OpenAI デモ</nuxt-link></h1>
+    <p class="text-left text-gray-500">model: {{ modelName }}</p>
     <div class="bg-gray-200 p-4 rounded-lg max-w-screen-md mx-auto">
         <div class="mb-4">
           <textarea class="p-2 border rounded w-full text-black" v-model="inputText" placeholder="Send a message..."></textarea>
@@ -20,10 +21,10 @@
       <div class="text-left text-gray-700">
         <div class="text-sm text-gray-500 mb-2">{{ result.date }}</div>
         <div v-if="result.role === 'user'">
-          <strong>You:</strong> {{ result.text }}
+          <span v-html="formatText(result.text)" />
         </div>
         <div v-else>
-          <strong>AI:</strong> <span v-html="result.text" />
+          <span v-html="result.text" />
         </div>
       </div>
     </div>
@@ -36,12 +37,17 @@ import { defineComponent, ref } from '@nuxtjs/composition-api';
 export default defineComponent({
   name: 'ChatGptComponent',
   setup() {
+    const modelName = ref(process.env.CHAT_GPT_MODEL)
     const inputText = ref('');
     const results = ref<{ date: string; text: string; role: string }[]>([]);
     const isLoading = ref(false);
 
     const isInputValid = () => {
       return inputText.value.trim().length > 0;
+    };
+
+    const formatText = (text: string) => {
+      return text.replace(/\n/g, '<br>');
     };
 
     const renderText = async (text: string) => {
@@ -74,7 +80,7 @@ export default defineComponent({
         const { data } = await axios.post(
           `${process.env.CHAT_GPT_API_URL}`,
           {
-            model: 'gpt-3.5-turbo',
+            model: modelName.value,
             messages: [
               {
                 role: 'user',
@@ -101,7 +107,7 @@ export default defineComponent({
       }
     };
 
-    return { inputText, results, isInputValid, generateResponse, isLoading };
+    return { modelName, inputText, results, isInputValid, formatText, generateResponse, isLoading };
   },
 });
 </script>
