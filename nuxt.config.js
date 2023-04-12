@@ -10,6 +10,7 @@ const {
     QIITA_API,
     CHATGPT_API_KEY,
     CHAT_GPT_API_URL,
+    CHAT_GPT_MODEL,
 } = process.env
 
 export default {
@@ -24,7 +25,8 @@ export default {
         MODE,
         QIITA_API,
         CHATGPT_API_KEY,
-        CHAT_GPT_API_URL
+        CHAT_GPT_API_URL,
+        CHAT_GPT_MODEL
     },
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
