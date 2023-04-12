@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1 class="my-3 text-center text-3xl font-semibold text-gray-700"><nuxt-link to="/">OpenAI デモ</nuxt-link></h1>
-    <p class="text-left text-gray-500">model: {{ modelName }}</p>
     <div class="bg-gray-200 p-4 rounded-lg max-w-screen-md mx-auto">
+        <p class="text-left text-gray-500">model: {{ modelName }}</p>
         <div class="mb-4">
           <textarea class="p-2 border rounded w-full text-black" v-model="inputText" placeholder="Send a message..."></textarea>
         </div>
