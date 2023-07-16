@@ -32,11 +32,21 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import axios from 'axios';
 import { defineComponent, ref } from '@nuxtjs/composition-api';
+import {API, graphqlOperation} from 'aws-amplify'
+import { createChatGptResult } from '@/src/graphql/mutations';
+
 export default defineComponent({
   name: 'ChatGptComponent',
-  setup() {
+  props: {
+    username: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
     const modelName = ref(process.env.CHAT_GPT_MODEL)
     const inputText = ref('');
     const results = ref<{ date: string; text: string; role: string }[]>([]);
@@ -74,6 +84,7 @@ export default defineComponent({
       try {
         const questionText = inputText.value;
         const questionDate = new Date().toLocaleString();
+        const userName = props.username;
         results.value.unshift({ date: questionDate, text: questionText, role: 'user' });
         inputText.value = ''
 
@@ -100,8 +111,21 @@ export default defineComponent({
         const date = new Date().toLocaleString();
         results.value.unshift({ date, text: '', role: 'ai' });
         await renderText(text);
+
+        // GraphQLへ送信
+        const result = await API.graphql(graphqlOperation(createChatGptResult, {
+          user: userName,
+          input: questionText,
+          output: text,
+          createdat: date
+        }));
+
+        // @ts-ignore
+        console.log(result.data.createChatGptResult.response)
+
       } catch (error) {
-        alert(error);
+        console.error(error);
+        alert('エラーが発生しました.consoleを確認ください.');
       } finally {
         isLoading.value = false;
       }

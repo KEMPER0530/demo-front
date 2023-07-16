@@ -107,7 +107,6 @@ export default defineComponent({
     Header,
   },
   setup() {
-    const { $axios } = useContext()
     const from = ref('')
     const to = ref('')
     const subject = ref('')
@@ -178,7 +177,7 @@ export default defineComponent({
         }
       }catch(error){
         console.error(error)
-        alert("メール送信に失敗しました: " + error.errors[0].message)
+        alert("メール送信に失敗しました: " + (error as any).errors[0].message)
       }
     }
 

@@ -66,6 +66,7 @@ jobs:
             echo "CHAT_GPT_API_URL='$CHAT_GPT_API_URL'" >> .env
             echo "CHATGPT_API_KEY='$CHATGPT_API_KEY'" >> .env
             echo "CHAT_GPT_MODEL='$CHAT_GPT_MODEL'" >> .env
+            echo "ALLOWED_USERNAME='ALLOWED_USERNAME'" >> .env
       - aws-s3/copy:
           from: .env
           to: 's3://${BACKET_NAME}/.env'

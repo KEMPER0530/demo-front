@@ -4,22 +4,23 @@ export const createNuxtMail = `
     $to: String,
     $subject: String,
     $body: String,
-    $createdat: String,
-    $updatedat: String
+    $createdat: String
   ) {
-    createNuxtMail(body: $body, from: $from, subject: $subject, to: $to,
-                           createdat: $createdat, updatedat: $updatedat)
+    createNuxtMail(body: $body, from: $from, subject: $subject, to: $to, createdat: $createdat)
     {
       response
       result
     }
   }`;
 
-export const createChatGpt = `
-  mutation createChatGpt(
-    $prompt: String
+export const createChatGptResult = `
+  mutation createChatGptResult(
+    $user: String,
+    $input: String,
+    $output: String,
+    $createdat: String
   ) {
-    createChatGpt(prompt: $prompt)
+    createChatGptResult(user: $user, input: $input, output: $output, createdat: $createdat)
     {
       response
       result

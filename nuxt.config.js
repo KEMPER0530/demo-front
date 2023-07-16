@@ -11,6 +11,7 @@ const {
     CHATGPT_API_KEY,
     CHAT_GPT_API_URL,
     CHAT_GPT_MODEL,
+    ALLOWED_USERNAME,
 } = process.env
 
 export default {
@@ -26,7 +27,11 @@ export default {
         QIITA_API,
         CHATGPT_API_KEY,
         CHAT_GPT_API_URL,
-        CHAT_GPT_MODEL
+        CHAT_GPT_MODEL,
+        ALLOWED_USERNAME
+    },
+    publicRuntimeConfig: {
+      allowedUsername: process.env.ALLOWED_USERNAME
     },
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
@@ -36,7 +41,7 @@ export default {
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
-        title: 'mail-form-demo-front',
+        title: 'demo-front',
         htmlAttrs: {
             lang: 'ja'
         },
@@ -61,7 +66,7 @@ export default {
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
         { src: '@/plugins/amplify.js', mode: 'client' },
-        { src: '@/plugins/element-ui', ssr: false },
+        { src: '@/plugins/element-ui', ssr: false }
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -74,7 +79,7 @@ export default {
         // https://go.nuxtjs.dev/tailwindcss
         '@nuxtjs/tailwindcss',
         '@nuxtjs/composition-api/module',
-        '@nuxtjs/dotenv',
+        '@nuxtjs/dotenv'
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
@@ -84,26 +89,26 @@ export default {
         '@nuxtjs/auth-next'
     ],
     router: {
-        middleware: ['auth'],
+        middleware: ['auth']
     },
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {},
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
-        extend: function(config, { isDev, isClient }) {
+        extend: function(config) {
             config.node = {
                 fs: "empty"
             };
         },
-        vendor: ['axios', 'element-ui'],
+        vendor: ['axios', 'element-ui']
     },
     auth: {
         redirect: {
             login: '/signin', // 未ログイン時に認証ルートへアクセスした際のリダイレクトURL
             logout: '/signin', // ログアウト時のリダイレクトURL
             callback: '/callback', // Oauth認証等で必要となる コールバックルート
-            home: false, // ログイン後のリダイレクトURL
+            home: false // ログイン後のリダイレクトURL
         },
         localStorage: false,
         strategies: {
@@ -115,9 +120,9 @@ export default {
                     region: process.env.AWS_COGNITO_REIGION
                 },
                 endpoints: {
-                    user: false,
-                },
-            },
-        },
-    },
+                    user: false
+                }
+            }
+        }
+    }
 }

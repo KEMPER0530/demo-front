@@ -1,64 +1,46 @@
-﻿schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
+﻿type ChatGptDetail {
+	id: String
+	user: String
+	input: String
+	output: String
+	createdat: String
 }
 
-type ChatGpt {
-  response: Int
-  result: String
+type ChatGptResult {
+	response: Int
+	result: String
 }
 
-type ChatGptConnection {
-  items: [ChatGpt]
-  nextToken: String
-}
-
-type Mutation {
-  createChatGpt(prompt: String): ChatGpt
-  createNuxtMail(
-    body: String
-    createdat: String
-    from: String
-    subject: String
-    to: String
-    updatedat: String
-  ): NuxtMail
+type ChatGptResultList {
+	items: [ChatGptDetail]
+	nextToken: String
 }
 
 type NuxtMail {
-  response: Int
-  result: String
+	response: Int
+	result: String
 }
 
-type NuxtMailConnection {
-  items: [NuxtMail]
-  nextToken: String
+type Mutation {
+	createNuxtMail(
+		from: String,
+		to: String,
+		subject: String,
+		body: String
+	): NuxtMail
+	createChatGptResult(
+		user: String,
+		input: String,
+		output: String,
+		createdat: String
+	): ChatGptResult
 }
 
 type Query {
-  getNuxtMail(id: ID!): NuxtMail
-  listNuxtMails(
-    filter: TableStringFilterInput
-    limit: Int
-    nextToken: String
-  ): NuxtMailConnection
+	listChatGptResults: ChatGptResultList
 }
 
-type Subscription {
-  onCreateNuxtMail(body: String, id: ID): NuxtMail
-    @aws_subscribe(mutations: ["createNuxtMail"])
-}
-
-input TableStringFilterInput {
-  beginsWith: String
-  between: [String]
-  contains: String
-  eq: String
-  ge: String
-  gt: String
-  le: String
-  lt: String
-  ne: String
-  notContains: String
+schema {
+	query: Query
+	mutation: Mutation
 }

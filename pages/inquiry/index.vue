@@ -1,5 +1,5 @@
 <template>
-  <InquiryForm></InquiryForm>
+  <InquiryForm/>
 </template>
 
 <script lang="ts">

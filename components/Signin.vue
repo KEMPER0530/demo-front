@@ -34,7 +34,6 @@ export default Vue.extend({
   },
   methods: {
     async signin() {
-      // try {
         const username = this.email;
         const password  = this.password;
         await this.$auth.loginWith('cognito', {
@@ -42,7 +41,7 @@ export default Vue.extend({
             username,
             password,
           }
-        }).then((success) => {
+        }).then(() => {
            console.log("success sign in.... ");
            // @ts-ignore
            this.$router.push({ path: '/' });
