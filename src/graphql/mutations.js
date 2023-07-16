@@ -4,9 +4,8 @@ export const createNuxtMail = `
     $to: String,
     $subject: String,
     $body: String,
-    $createdat: String
   ) {
-    createNuxtMail(body: $body, from: $from, subject: $subject, to: $to, createdat: $createdat)
+    createNuxtMail(body: $body, from: $from, subject: $subject, to: $to)
     {
       response
       result
