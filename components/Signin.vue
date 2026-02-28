@@ -1,6 +1,7 @@
 <template>
   <div class="form-wrapper">
-    <h1><b>Sign In</b></h1>
+    <h1 class="auth-title"><b>Sign In</b></h1>
+    <p class="auth-subtitle">アカウントでログインして、各機能をご利用ください。</p>
     <div>
       <div class="form-item">
         <label for="email"></label>
@@ -16,6 +17,10 @@
     </div>
     <div class="form-footer">
       <nuxt-link to="/signup">Create an account</nuxt-link>
+      <span class="footer-divider">|</span>
+      <nuxt-link to="/terms">利用規約</nuxt-link>
+      <span class="footer-divider">|</span>
+      <nuxt-link to="/privacy">プライバシーポリシー</nuxt-link>
     </div>
   </div>
 </template>

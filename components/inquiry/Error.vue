@@ -1,5 +1,5 @@
 <template>
-  <p class="text-xs text-red-500 mt-3">{{ message }}</p>
+  <p class="inquiry-error">{{ message }}</p>
 </template>
 
 <script lang="ts">
@@ -10,3 +10,11 @@ export default defineComponent({
   props: { message: { type: String, required: true } },
 })
 </script>
+
+<style scoped>
+.inquiry-error {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #ff99ae;
+}
+</style>

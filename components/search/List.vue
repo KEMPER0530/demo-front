@@ -1,11 +1,11 @@
 <template>
-<div>
-  <div v-if="lists.length === 0 && !hasData">
+<div class="search-results">
+  <div v-if="lists.length === 0 && !hasData" class="no-results">
     <i class="el-icon-warning">&nbsp;No results found for your keyword.</i>
   </div>
   <div v-else>
     <el-col :span="colSpan" v-for="(element, index) in lists" :key="index" class="col-style">
-      <el-card :body-style="{ padding: '15px' }" class="box-card">
+      <el-card :body-style="{ padding: '15px' }" class="box-card fade-up-item">
         <div slot="header" class="clearfix">
           <a class="list-link" :href="element.url" target="_blank">{{ element.title }}</a>
         </div>
@@ -79,3 +79,70 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.search-results {
+  margin-top: 12px;
+}
+
+.no-results {
+  padding: 18px 12px;
+  color: #ffd398;
+}
+
+.col-style {
+  padding: 10px;
+}
+
+.box-card {
+  height: 380px;
+  border-radius: 14px;
+  border: 1px solid rgba(170, 214, 255, 0.2);
+  background: linear-gradient(145deg, rgba(8, 28, 58, 0.78), rgba(14, 16, 21, 0.82));
+  color: #edf6ff;
+  transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+}
+
+.box-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(206, 234, 255, 0.55);
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.3);
+}
+
+.content-style {
+  line-height: 1.7;
+  color: rgba(220, 236, 255, 0.95);
+}
+
+.text {
+  font-size: 14px;
+}
+
+.tab-style {
+  margin-right: 5px;
+}
+
+.list-link:link,
+.list-link:visited {
+  color: #ffca7d;
+}
+
+.list-link:hover {
+  color: #fff1d3;
+}
+
+.fade-up-item {
+  animation: fade-up 0.65s ease-out;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
