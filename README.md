@@ -1,3 +1,6 @@
+[![CircleCI](https://circleci.com/gh/circleci/circleci-docs.svg?style=shield)](https://circleci.com/gh/KEMPER0530/demo-frontend)
+
+
 # demo-front
 
 Nuxt.js（Vue 2）で作られたフロントエンドアプリです。  
