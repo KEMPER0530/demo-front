@@ -5,7 +5,7 @@
     <div class="inquiry-shell">
       <header class="inquiry-head">
         <h1 class="inquiry-title">
-          <nuxt-link to="/" type="String">メール送信デモ</nuxt-link>
+          <NuxtLink to="/">メール送信デモ</NuxtLink>
         </h1>
         <p class="inquiry-subtitle">Amazon SES 連携フォーム</p>
       </header>
@@ -24,7 +24,7 @@
           </div>
         </aside>
         <section class="inquiry-form-wrap">
-          <form class="inquiry-form">
+          <form class="inquiry-form" @submit.prevent="onSubmit">
             <div class="form-row">
               <Label>
                 From
@@ -34,10 +34,11 @@
                 v-model="from"
                 :type="'text'"
                 :placeholder="'from@example.com'"
+                @blur="touchedFrom = true"
               />
               <Error
-                v-if="params.from.$dirty && params.from.$anyInvalid"
-                :message="params.from.format.$message"
+                v-if="fromError"
+                :message="fromError"
               />
             </div>
             <div class="form-row">
@@ -48,10 +49,11 @@
                 v-model="to"
                 :type="'text'"
                 :placeholder="'to@example.com'"
+                @blur="touchedTo = true"
               />
               <Error
-                v-if="params.to.$dirty && params.to.$anyInvalid"
-                :message="params.to.format.$message"
+                v-if="toError"
+                :message="toError"
               />
             </div>
             <div class="form-row">
@@ -62,10 +64,11 @@
                 v-model="subject"
                 :type="'text'"
                 :placeholder="'テストメールの件'"
+                @blur="touchedSubject = true"
               />
               <Error
-                v-if="params.subject.$dirty && params.subject.$anyInvalid"
-                :message="params.subject.$message"
+                v-if="subjectError"
+                :message="subjectError"
               />
             </div>
             <div class="form-row">
@@ -74,16 +77,18 @@
               </Label>
               <BodyInput
                 v-model="body"
-                :type="'text'"
                 :placeholder="'お問い合わせ内容です'"
+                @blur="touchedBody = true"
               />
               <Error
-                v-if="params.body.$dirty && params.body.$anyInvalid"
-                :message="params.body.$message"
+                v-if="bodyError"
+                :message="bodyError"
               />
             </div>
             <div class="submit-row">
-              <Button @click="onSubmit">送信</Button>
+              <Button type="submit" :disabled="isSubmitting">
+                {{ isSubmitting ? '送信中...' : '送信' }}
+              </Button>
             </div>
           </form>
         </section>
@@ -91,118 +96,147 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
-import { useValidation } from 'vue-composable'
-import Submitted from '@/components/inquiry/Submitted.vue'
-import Label from '@/components/inquiry/Label.vue'
-import FromInput from '@/components/inquiry/FromInput.vue'
-import ToInput from '@/components/inquiry/ToInput.vue'
-import SubjectInput from '@/components/inquiry/SubjectInput.vue'
-import BodyInput from '@/components/inquiry/BodyInput.vue'
-import Button from '@/components/inquiry/Button.vue'
-import Error from '@/components/inquiry/Error.vue'
-import {API, graphqlOperation} from 'aws-amplify'
-import {createNuxtMail} from '@/src/graphql/mutations'
+<script setup lang="ts">
+import { generateClient } from 'aws-amplify/api';
+import Submitted from '@/components/inquiry/Submitted.vue';
+import Label from '@/components/inquiry/Label.vue';
+import FromInput from '@/components/inquiry/FromInput.vue';
+import ToInput from '@/components/inquiry/ToInput.vue';
+import SubjectInput from '@/components/inquiry/SubjectInput.vue';
+import BodyInput from '@/components/inquiry/BodyInput.vue';
+import Button from '@/components/inquiry/Button.vue';
+import Error from '@/components/inquiry/Error.vue';
+import { createNuxtMail } from '@/src/graphql/mutations';
 
-export default defineComponent({
-  name: 'Form',
-  components: {
-    Submitted,
-    Label,
-    FromInput,
-    ToInput,
-    SubjectInput,
-    BodyInput,
-    Button,
-    Error,
-  },
-  setup() {
-    const from = ref('')
-    const to = ref('')
-    const subject = ref('')
-    const body = ref('')
-    const isSubmited = ref(false)
+const client = generateClient();
 
-    const required = (value: string | null | undefined): Boolean => !!value
-    const mailAdressFormat = (value: string | null | undefined): Boolean =>
-        value ? !!value.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) : true
-    const params = useValidation({
-      from: {
-        $value: from,
-        required,
-        format: {
-          $validator: mailAdressFormat,
-          $message: 'メールアドレスの形式が不正です',
-        },
-      },
-      to: {
-        $value: to,
-        required,
-        format: {
-          $validator: mailAdressFormat,
-          $message: 'メールアドレスの形式が不正です',
-        },
-      },
-      subject: {
-        $value: subject,
-        required,
-        $message: '件名を入力してください',
-      },
-      body: {
-        $value: body,
-        required,
-        $message: 'お問い合わせ内容を入力してください',
-      },
-    })
+const from = ref('');
+const to = ref('');
+const subject = ref('');
+const body = ref('');
+const isSubmited = ref(false);
+const isSubmitting = ref(false);
 
-    const onSubmit = async (): Promise<any> => {
-      try{
-        // graphqlへ送信
-        if (!params.$anyInvalid) {
-          const date = new Date().toLocaleString();
-          const result = await API.graphql(
-                graphqlOperation(createNuxtMail,{
-                  from: from.value,
-                  to: to.value,
-                  subject: subject.value,
-                  body: body.value,
-                  createdat: date,
-                  updatedat: date,
-                })
-              )
-          // @ts-ignore
-          console.log(result.data.createNuxtMail.response)
-          // @ts-ignore
-          if(result.data.createNuxtMail.response === 200 ){
-            isSubmited.value = true
-          }else{
-            // @ts-ignore
-            console.log(result.data.createNuxtMail.response + " : " + result.data.createNuxtMail.result)
-            alert("メール送信に失敗しました")
-          }
-        return result
-        } else {
-          alert("入力項目にエラーが存在します")
-          return await params.$touch()
-        }
-      }catch(error){
-        console.error(error)
-        alert("メール送信に失敗しました: " + (error as any).errors[0].message)
-      }
+const touchedFrom = ref(false);
+const touchedTo = ref(false);
+const touchedSubject = ref(false);
+const touchedBody = ref(false);
+
+const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+const fromError = computed(() => {
+  if (!touchedFrom.value) {
+    return '';
+  }
+  const value = from.value.trim();
+  if (!value) {
+    return 'メールアドレスを入力してください';
+  }
+  if (!emailPattern.test(value)) {
+    return 'メールアドレスの形式が不正です';
+  }
+  return '';
+});
+
+const toError = computed(() => {
+  if (!touchedTo.value) {
+    return '';
+  }
+  const value = to.value.trim();
+  if (!value) {
+    return 'メールアドレスを入力してください';
+  }
+  if (!emailPattern.test(value)) {
+    return 'メールアドレスの形式が不正です';
+  }
+  return '';
+});
+
+const subjectError = computed(() => {
+  if (!touchedSubject.value) {
+    return '';
+  }
+  if (!subject.value.trim()) {
+    return '件名を入力してください';
+  }
+  return '';
+});
+
+const bodyError = computed(() => {
+  if (!touchedBody.value) {
+    return '';
+  }
+  if (!body.value.trim()) {
+    return 'お問い合わせ内容を入力してください';
+  }
+  return '';
+});
+
+const hasInvalid = computed(() => {
+  return Boolean(fromError.value || toError.value || subjectError.value || bodyError.value);
+});
+
+const resolveGraphQlError = (error: unknown): string => {
+  if (typeof error === 'object' && error && 'errors' in error) {
+    const errors = (error as { errors?: Array<{ message?: string }> }).errors;
+    if (errors?.length && errors[0].message) {
+      return errors[0].message;
+    }
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return '不明なエラー';
+};
+
+const onSubmit = async () => {
+  touchedFrom.value = true;
+  touchedTo.value = true;
+  touchedSubject.value = true;
+  touchedBody.value = true;
+
+  if (hasInvalid.value) {
+    alert('入力項目にエラーが存在します');
+    return;
+  }
+  if (isSubmitting.value) {
+    return;
+  }
+
+  isSubmitting.value = true;
+  try {
+    const date = new Date().toLocaleString();
+    const result = await client.graphql({
+      query: createNuxtMail,
+      variables: {
+        from: from.value.trim(),
+        to: to.value.trim(),
+        subject: subject.value.trim(),
+        body: body.value.trim(),
+        createdat: date,
+        updatedat: date,
+      },
+      authMode: 'apiKey',
+    });
+
+    const responseCode = (result as { data?: { createNuxtMail?: { response?: number; result?: string } } })
+      .data?.createNuxtMail?.response;
+    if (responseCode === 200) {
+      isSubmited.value = true;
+      return;
     }
 
-    return {
-      from,
-      to,
-      subject,
-      body,
-      isSubmited,
-      params,
-      onSubmit,
-    }
-  },
-})
+    const responseText = (result as { data?: { createNuxtMail?: { response?: number; result?: string } } })
+      .data?.createNuxtMail?.result;
+    console.error('mail response error:', responseCode, responseText);
+    alert('メール送信に失敗しました');
+  } catch (error) {
+    console.error(error);
+    alert(`メール送信に失敗しました: ${resolveGraphQlError(error)}`);
+  } finally {
+    isSubmitting.value = false;
+  }
+};
 </script>
 
 <style scoped>

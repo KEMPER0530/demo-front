@@ -2,7 +2,7 @@
   <header class="search-hero">
     <div class="search-hero-inner">
       <p class="hero-kicker">Discover</p>
-      <h1><nuxt-link to="/">Qiita記事</nuxt-link></h1>
+      <h1><NuxtLink to="/">Qiita記事</NuxtLink></h1>
       <p class="hero-sub">キーワードから記事を検索し、気になる技術トピックをすぐに発見できます。</p>
     </div>
   </header>

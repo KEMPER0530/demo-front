@@ -2,30 +2,36 @@
   <input
     :type="type"
     :placeholder="placeholder"
+    :value="modelValue"
     class="inquiry-input"
     @input="handleInput"
-  />
+    @blur="emit('blur')"
+  >
 </template>
 
-<script lang="ts">
-import { defineComponent, SetupContext } from '@vue/composition-api'
+<script setup lang="ts">
+withDefaults(
+  defineProps<{
+    modelValue?: string;
+    type?: string;
+    placeholder?: string;
+  }>(),
+  {
+    modelValue: '',
+    type: 'text',
+    placeholder: '',
+  },
+);
 
-export default defineComponent({
-  name: 'SubjectInput',
-  props: {
-    type: { type: String, required: true },
-    placeholder: { type: String, required: false, default: '00000000000' },
-  },
-  setup(_, context: SetupContext) {
-    const handleInput = (e: Event) => {
-      const target = e.target as HTMLInputElement
-      context.emit('input', target.value)
-    }
-    return {
-      handleInput,
-    }
-  },
-})
+const emit = defineEmits<{
+  (event: 'update:modelValue', value: string): void;
+  (event: 'blur'): void;
+}>();
+
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLInputElement | null;
+  emit('update:modelValue', target?.value ?? '');
+};
 </script>
 
 <style scoped>

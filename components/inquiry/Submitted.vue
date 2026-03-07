@@ -2,21 +2,11 @@
   <div class="submitted">
     <h1>メール送信完了</h1>
     <h2>AmazonSESでメールを送信しました。<br>送信内容をご確認ください。</h2>
-    <nuxt-link
-      to="/"
-      class="submitted-link"
-    >
+    <NuxtLink to="/" class="submitted-link">
       TOPへ戻る
-    </nuxt-link>
+    </NuxtLink>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'Submitted',
-})
-</script>
 
 <style scoped>
 .submitted {

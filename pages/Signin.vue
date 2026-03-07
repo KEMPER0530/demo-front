@@ -9,10 +9,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  auth: false,
-}
+<script setup lang="ts">
+definePageMeta({
+  middleware: 'guest',
+});
 </script>
 
 <style scoped>

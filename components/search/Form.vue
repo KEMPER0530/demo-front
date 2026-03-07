@@ -1,80 +1,105 @@
 <template>
   <div class="search-page">
-    <el-container>
-      <el-main class="search-main">
-        <div class="search-panel fade-up">
-          <el-form :inline="true" :model="searchForm" ref="searchForm" :rules="rules" @submit.native.prevent>
-            <el-form-item prop="keyword">
-              <el-input placeholder="search by keyword" prefix-icon="el-icon-search" v-model="searchForm.keyword"  @keyup.enter.native="search('searchForm')" />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="warning" @click="search('searchForm')">search</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-        <List :lists="list" :hasData="hasData" />
-      </el-main>
-    </el-container>
+    <main class="search-main">
+      <div class="search-panel fade-up">
+        <form class="search-form" @submit.prevent="search">
+          <label class="sr-only" for="search-keyword">search by keyword</label>
+          <input
+            id="search-keyword"
+            v-model="searchKeyword"
+            type="text"
+            class="search-input"
+            placeholder="search by keyword"
+          >
+          <button type="submit" class="search-button">search</button>
+        </form>
+        <p v-if="errorMessage" class="search-error">{{ errorMessage }}</p>
+      </div>
+      <SearchList :lists="list" :has-data="hasData" :is-loading="isLoading" />
+    </main>
   </div>
 </template>
 
-<script lang="babel">
-import axios from 'axios'
-import List from '~/components/search/List.vue'
+<script setup lang="ts">
+import SearchList from '@/components/search/List.vue';
 
-export default {
-  components: {
-    List
-  },
-  data () {
-    return {
-      searchForm: {
-        keyword: ''
-      },
-      rules: {
-        keyword: [
-          { required: true, message: 'Please input the keyword', trigger: 'blur' }
-        ]
-      },
-      list: [],
-      hasData: true
-    }
-  },
-  created () {
-    this.searchForm.keyword = 'AWS'
-    this.sendRequest()
-    this.searchForm.keyword = ''
-  },
-  methods: {
-    search (form) {
-      this.$refs[form].validate((valid) => {
-        if (!valid) {
-          return false
-        }
-        this.sendRequest()
-      })
-    },
-    sendRequest () {
-      axios.get(`${process.env.QIITA_API}` + 'items', {
-        headers: {'Content-Type': 'application/json'},
-        params: {
-          page: 1,
-          per_page: 20,
-          query: this.searchForm.keyword
-        }
-      })
-        .then(response => {
-          if (response.data.length === 0) {
-            this.hasData = false
-          }
-          this.list = response.data
-        })
-        .catch(e => {
-          console.error('error:', e)
-        })
-    }
-  }
+interface QiitaTag {
+  name: string;
 }
+
+interface QiitaUser {
+  id: string;
+  description?: string | null;
+  profile_image_url?: string;
+}
+
+interface QiitaItem {
+  title: string;
+  url: string;
+  created_at: string;
+  likes_count: number;
+  body: string;
+  tags: QiitaTag[];
+  user: QiitaUser;
+}
+
+const config = useRuntimeConfig();
+
+const searchKeyword = ref('');
+const list = ref<QiitaItem[]>([]);
+const hasData = ref(true);
+const isLoading = ref(false);
+const errorMessage = ref('');
+
+const buildQiitaEndpoint = (): string => {
+  const base = (config.public.qiitaApi || '').trim();
+  if (!base) {
+    throw new Error('QIITA_API が設定されていません');
+  }
+  return `${base.replace(/\/?$/, '/')}items`;
+};
+
+const sendRequest = async () => {
+  isLoading.value = true;
+  errorMessage.value = '';
+  try {
+    const endpoint = buildQiitaEndpoint();
+    const response = await $fetch<QiitaItem[]>(endpoint, {
+      params: {
+        page: 1,
+        per_page: 20,
+        query: searchKeyword.value.trim(),
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    list.value = Array.isArray(response) ? response : [];
+    hasData.value = list.value.length > 0;
+  } catch (error) {
+    console.error('search error:', error);
+    list.value = [];
+    hasData.value = false;
+    errorMessage.value = '検索に失敗しました。環境変数とAPI設定を確認してください。';
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const search = async () => {
+  if (!searchKeyword.value.trim()) {
+    errorMessage.value = 'Please input the keyword';
+    return;
+  }
+  await sendRequest();
+};
+
+onMounted(async () => {
+  searchKeyword.value = 'AWS';
+  await sendRequest();
+  searchKeyword.value = '';
+});
 </script>
 
 <style scoped>
@@ -100,28 +125,54 @@ export default {
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
 }
 
-.search-panel :deep(.el-form-item) {
-  margin-bottom: 0;
+.search-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
 }
 
-.search-panel :deep(.el-input__inner) {
+.search-input {
+  width: 100%;
+  min-height: 42px;
   background: rgba(9, 18, 34, 0.76);
   color: #eff8ff;
   border: 1px solid rgba(143, 205, 255, 0.34);
   border-radius: 12px;
+  padding: 0 12px;
 }
 
-.search-panel :deep(.el-input__inner:focus) {
+.search-input:focus {
+  outline: none;
   border-color: rgba(126, 226, 255, 0.95);
+  box-shadow: 0 0 0 3px rgba(75, 152, 255, 0.2);
 }
 
-.search-panel :deep(.el-button) {
+.search-button {
+  min-width: 92px;
+  min-height: 42px;
   border: none;
   border-radius: 12px;
   background: linear-gradient(110deg, #ffad3a, #ff7048);
   color: #fff;
   font-weight: 700;
   box-shadow: 0 8px 18px rgba(255, 125, 61, 0.3);
+}
+
+.search-error {
+  margin: 8px 0 0;
+  color: #ffc28a;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .fade-up {
@@ -138,6 +189,16 @@ export default {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .search-form {
+    grid-template-columns: 1fr;
+  }
+
+  .search-button {
+    width: 100%;
   }
 }
 </style>

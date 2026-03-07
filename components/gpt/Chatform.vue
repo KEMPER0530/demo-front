@@ -3,14 +3,14 @@
     <div class="chat-ambient ambient-a" />
     <div class="chat-ambient ambient-b" />
     <div class="chat-shell">
-      <h1 class="chat-title"><nuxt-link to="/">OpenAI デモ</nuxt-link></h1>
+      <h1 class="chat-title"><NuxtLink to="/">OpenAI デモ</NuxtLink></h1>
       <div class="chat-panel">
         <p class="model-label">model: {{ modelName }}</p>
         <div class="mb-4">
           <textarea class="chat-textarea" v-model="inputText" placeholder="Send a message..."></textarea>
         </div>
         <div class="text-center">
-          <button v-if="!isLoading" :disabled="!isInputValid()" :class="!isInputValid() ? 'chat-button disabled' : 'chat-button'" @click="generateResponse">Generate Response</button>
+          <button v-if="!isLoading" :disabled="!isInputValid" :class="!isInputValid ? 'chat-button disabled' : 'chat-button'" @click="generateResponse">Generate Response</button>
           <div v-if="isLoading" class="loading inline-block">
             <div class="flex items-center justify-center">
               <div class="w-10 h-10 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-1"></div>
@@ -35,109 +35,118 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-import axios from 'axios';
-import { defineComponent, ref } from '@nuxtjs/composition-api';
-import {API, graphqlOperation} from 'aws-amplify'
+<script setup lang="ts">
+import { generateClient } from 'aws-amplify/api';
 import { createChatGptResult } from '@/src/graphql/mutations';
 
-export default defineComponent({
-  name: 'ChatGptComponent',
-  props: {
-    username: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const modelName = ref(process.env.CHAT_GPT_MODEL)
-    const inputText = ref('');
-    const results = ref<{ date: string; text: string; role: string }[]>([]);
-    const isLoading = ref(false);
+interface ChatResult {
+  date: string;
+  text: string;
+  role: 'user' | 'ai';
+}
 
-    const isInputValid = () => {
-      return inputText.value.trim().length > 0;
-    };
+interface ChatApiResponse {
+  choices?: Array<{ message?: { content?: string } }>;
+}
 
-    const formatText = (text: string) => {
-      return text.replace(/\n/g, '<br>');
-    };
+const props = defineProps<{ username: string }>();
+const config = useRuntimeConfig();
+const client = generateClient();
 
-    const renderText = async (text: string) => {
-      const typeContent = text.replace(/\n/g, '<br>');
-      const typeSprit = typeContent.split('');
-      const typeSpeed = 50;
-      let typeLength = 0;
+const modelName = computed(() => config.public.chatGptModel || 'gpt-4o-mini');
+const inputText = ref('');
+const results = ref<ChatResult[]>([]);
+const isLoading = ref(false);
 
-      return new Promise((resolve) => {
-        const typeInterval = setInterval(() => {
-          if (typeSprit[typeLength] == undefined) {
-            clearInterval(typeInterval);
-            resolve('');
-          } else {
-            results.value[0].text += typeSprit[typeLength];
-            typeLength++;
-          }
-        }, typeSpeed);
-      });
-    };
+const isInputValid = computed(() => inputText.value.trim().length > 0);
 
-    const generateResponse = async () => {
-      isLoading.value = true;
-      try {
-        const questionText = inputText.value;
-        const questionDate = new Date().toLocaleString();
-        const userName = props.username;
-        results.value.unshift({ date: questionDate, text: questionText, role: 'user' });
-        inputText.value = ''
+const formatText = (text: string) => {
+  return text.replace(/\n/g, '<br>');
+};
 
-        const { data } = await axios.post(
-          `${process.env.CHAT_GPT_API_URL}`,
-          {
-            model: modelName.value,
-            messages: [
-              {
-                role: 'user',
-                content: questionText,
-              },
-            ],
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${process.env.CHATGPT_API_KEY}`,
-            },
-          }
-        );
+const renderText = async (text: string) => {
+  const rendered = formatText(text);
+  const chars = rendered.split('');
+  const typeSpeed = 35;
+  let index = 0;
 
-        const text = data.choices[0].message.content;
-        const date = new Date().toLocaleString();
-        results.value.unshift({ date, text: '', role: 'ai' });
-        await renderText(text);
-
-        // GraphQLへ送信
-        const result = await API.graphql(graphqlOperation(createChatGptResult, {
-          user: userName,
-          input: questionText,
-          output: text,
-          createdat: date
-        }));
-
-        // @ts-ignore
-        console.log(result.data.createChatGptResult.response)
-
-      } catch (error) {
-        console.error(error);
-        alert('エラーが発生しました.consoleを確認ください.');
-      } finally {
-        isLoading.value = false;
+  await new Promise<void>((resolve) => {
+    const timer = window.setInterval(() => {
+      const target = results.value[0];
+      if (!target || chars[index] === undefined) {
+        window.clearInterval(timer);
+        resolve();
+        return;
       }
-    };
 
-    return { modelName, inputText, results, isInputValid, formatText, generateResponse, isLoading };
-  },
-});
+      target.text += chars[index];
+      index += 1;
+    }, typeSpeed);
+  });
+};
+
+const extractResponseText = (data: ChatApiResponse): string => {
+  return data.choices?.[0]?.message?.content ?? '';
+};
+
+const generateResponse = async () => {
+  if (!isInputValid.value || isLoading.value) {
+    return;
+  }
+
+  isLoading.value = true;
+  try {
+    const apiUrl = config.public.chatGptApiUrl;
+    const apiKey = config.public.chatGptApiKey;
+    if (!apiUrl || !apiKey) {
+      throw new Error('CHAT_GPT_API_URL または CHATGPT_API_KEY が未設定です');
+    }
+
+    const questionText = inputText.value.trim();
+    const questionDate = new Date().toLocaleString();
+    results.value.unshift({ date: questionDate, text: questionText, role: 'user' });
+    inputText.value = '';
+
+    const data = await $fetch<ChatApiResponse>(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: {
+        model: modelName.value,
+        messages: [
+          {
+            role: 'user',
+            content: questionText,
+          },
+        ],
+      },
+    });
+
+    const aiText = extractResponseText(data);
+    const responseDate = new Date().toLocaleString();
+    results.value.unshift({ date: responseDate, text: '', role: 'ai' });
+    await renderText(aiText);
+
+    await client.graphql({
+      query: createChatGptResult,
+      variables: {
+        user: props.username,
+        input: questionText,
+        output: aiText,
+        createdat: responseDate,
+      },
+      authMode: 'apiKey',
+    });
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : 'エラーが発生しました';
+    alert(message);
+  } finally {
+    isLoading.value = false;
+  }
+};
 </script>
 
 <style scoped>

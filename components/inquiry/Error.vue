@@ -2,13 +2,8 @@
   <p class="inquiry-error">{{ message }}</p>
 </template>
 
-<script lang="ts">
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'Error',
-  props: { message: { type: String, required: true } },
-})
+<script setup lang="ts">
+defineProps<{ message: string }>();
 </script>
 
 <style scoped>

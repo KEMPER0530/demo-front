@@ -23,18 +23,13 @@
         </p>
       </section>
       <div class="policy-links">
-        <nuxt-link to="/terms">利用規約</nuxt-link>
-        <nuxt-link to="/signin">サインインへ戻る</nuxt-link>
+        <NuxtLink to="/terms">利用規約</NuxtLink>
+        <NuxtLink to="/signin">サインインへ戻る</NuxtLink>
       </div>
     </main>
   </div>
 </template>
 
-<script>
-export default {
-  auth: false,
-}
-</script>
 
 <style scoped>
 .policy-page {

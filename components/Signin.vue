@@ -2,60 +2,75 @@
   <div class="form-wrapper">
     <h1 class="auth-title"><b>Sign In</b></h1>
     <p class="auth-subtitle">アカウントでログインして、各機能をご利用ください。</p>
-    <div>
+    <form @submit.prevent="signin">
       <div class="form-item">
-        <label for="email"></label>
-        <input type="email" name="email" required="required" placeholder="Email Address" v-model="email">
+        <label for="email" />
+        <input
+          id="email"
+          v-model="email"
+          type="email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder="Email Address"
+        >
       </div>
       <div class="form-item">
-        <label for="password"></label>
-        <input type="password" name="password" required="required" placeholder="Password" v-model="password">
+        <label for="password" />
+        <input
+          id="password"
+          v-model="password"
+          type="password"
+          name="password"
+          required
+          autocomplete="current-password"
+          placeholder="Password"
+        >
       </div>
       <div class="button-panel">
-        <button class="signin-button" title="Sign In" @click="signin">Sign In</button>
+        <button class="signin-button" type="submit" title="Sign In" :disabled="isSubmitting">
+          {{ isSubmitting ? 'Signing In...' : 'Sign In' }}
+        </button>
       </div>
-    </div>
+    </form>
     <div class="form-footer">
-      <nuxt-link to="/signup">Create an account</nuxt-link>
+      <NuxtLink to="/signup">Create an account</NuxtLink>
       <span class="footer-divider">|</span>
-      <nuxt-link to="/terms">利用規約</nuxt-link>
+      <NuxtLink to="/terms">利用規約</NuxtLink>
       <span class="footer-divider">|</span>
-      <nuxt-link to="/privacy">プライバシーポリシー</nuxt-link>
+      <NuxtLink to="/privacy">プライバシーポリシー</NuxtLink>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
+const auth = useAuth();
 
-export default Vue.extend({
-  data: () => ({
-    email: '' as string,
-    password: '' as string,
-  }),
-  head() {
-    return {
-    }
-  },
-  methods: {
-    async signin() {
-        const username = this.email;
-        const password  = this.password;
-        await this.$auth.loginWith('cognito', {
-          data: {
-            username,
-            password,
-          }
-        }).then(() => {
-           console.log("success sign in.... ");
-           // @ts-ignore
-           this.$router.push({ path: '/' });
-        }).catch((error) => {
-           alert(error.message);
-           console.log('error signing in:', error.code + ":" + error.message + ":" + error.name);
-           return;
-        });
-    },
-  },
-})
+const email = ref('');
+const password = ref('');
+const isSubmitting = ref(false);
+
+const signin = async () => {
+  if (isSubmitting.value) {
+    return;
+  }
+
+  const username = email.value.trim();
+  if (!username || !password.value) {
+    alert('メールアドレスとパスワードを入力してください');
+    return;
+  }
+
+  isSubmitting.value = true;
+  try {
+    await auth.login(username, password.value);
+    await navigateTo('/');
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'サインインに失敗しました';
+    alert(message);
+    console.error('error signing in:', error);
+  } finally {
+    isSubmitting.value = false;
+  }
+};
 </script>

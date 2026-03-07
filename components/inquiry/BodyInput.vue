@@ -2,29 +2,34 @@
   <textarea
     rows="5"
     :placeholder="placeholder"
+    :value="modelValue"
     class="inquiry-input inquiry-textarea"
     @input="handleInput"
+    @blur="emit('blur')"
   />
 </template>
 
-<script lang="ts">
-import { defineComponent, SetupContext } from '@vue/composition-api'
+<script setup lang="ts">
+withDefaults(
+  defineProps<{
+    modelValue?: string;
+    placeholder?: string;
+  }>(),
+  {
+    modelValue: '',
+    placeholder: '',
+  },
+);
 
-export default defineComponent({
-  name: 'BodyInput',
-  props: {
-    placeholder: { type: String, required: false, default: '' },
-  },
-  setup(_, context: SetupContext) {
-    const handleInput = (e: Event) => {
-      const target = e.target as HTMLInputElement
-      context.emit('input', target.value)
-    }
-    return {
-      handleInput,
-    }
-  },
-})
+const emit = defineEmits<{
+  (event: 'update:modelValue', value: string): void;
+  (event: 'blur'): void;
+}>();
+
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLTextAreaElement | null;
+  emit('update:modelValue', target?.value ?? '');
+};
 </script>
 
 <style scoped>

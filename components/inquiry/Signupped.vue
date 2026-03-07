@@ -1,19 +1,49 @@
 <template>
-  <div class="m-7 text-center">
+  <div class="signupped">
     <h1>ユーザ登録完了</h1>
-    <nuxt-link
-      to="/"
-      type="button"
-      class="py-4 px-8 mt-8 text-lg text-gray-50 bg-green-500 hover:bg-green-600 focus:ring-green-600 focus:ring-offset-green-600 text-white transition ease-in duration-200 text-center font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-full"
-    >
-      TOPへ戻る
-    </nuxt-link>
+    <NuxtLink to="/signin" class="signupped-link">
+      Sign Inへ進む
+    </NuxtLink>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'Submitted',
-})
-</script>
+<style scoped>
+.signupped {
+  margin: 1.8rem;
+  text-align: center;
+  animation: fade-up 0.6s ease-out;
+}
+
+.signupped h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #ffffff;
+}
+
+.signupped-link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.3rem;
+  border-radius: 999px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  background: linear-gradient(110deg, #00b496, #2d67ff);
+  box-shadow: 0 10px 20px rgba(45, 103, 255, 0.3);
+}
+
+.signupped-link:hover {
+  filter: saturate(1.08);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
