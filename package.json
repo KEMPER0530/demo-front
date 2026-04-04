@@ -17,7 +17,7 @@
     "nuxt": "3.13.2",
     "string-width": "4.2.3",
     "strip-ansi": "6.0.1",
-    "wrap-ansi": "7.0.0"
+    "wrap-ansi": "10.0.0"
   },
   "devDependencies": {
     "sass": "^1.90.0"
@@ -29,6 +29,6 @@
     "unstorage": "1.12.0",
     "string-width": "4.2.3",
     "strip-ansi": "6.0.1",
-    "wrap-ansi": "7.0.0"
+    "wrap-ansi": "10.0.0"
   }
 }
