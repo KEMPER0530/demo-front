@@ -3,7 +3,18 @@
     <div class="chat-ambient ambient-a" />
     <div class="chat-ambient ambient-b" />
     <div class="chat-shell">
-      <h1 class="chat-title"><NuxtLink to="/">OpenAI デモ</NuxtLink></h1>
+      <header class="chat-head">
+        <div>
+          <p class="chat-kicker">OpenAI</p>
+          <h1 class="chat-title"><NuxtLink to="/">OpenAI デモ</NuxtLink></h1>
+        </div>
+        <DashboardBackLink />
+      </header>
+      <div v-if="serviceErrorMessage" class="status-card maintenance-card">
+        <p class="status-kicker">Maintenance</p>
+        <h2>OpenAIページは現在工事中です</h2>
+        <p>{{ serviceErrorMessage }}</p>
+      </div>
       <div class="chat-panel">
         <p class="model-label">model: {{ modelName }}</p>
         <div class="mb-4">
@@ -57,11 +68,28 @@ const modelName = computed(() => config.public.chatGptModel || 'gpt-4o-mini');
 const inputText = ref('');
 const results = ref<ChatResult[]>([]);
 const isLoading = ref(false);
+const serviceErrorMessage = ref('');
 
 const isInputValid = computed(() => inputText.value.trim().length > 0);
 
 const formatText = (text: string) => {
   return text.replace(/\n/g, '<br>');
+};
+
+const buildOpenAiErrorMessage = (error: unknown): string => {
+  if (error && typeof error === 'object') {
+    const statusCode = 'statusCode' in error && typeof error.statusCode === 'number' ? error.statusCode : null;
+
+    if (statusCode === 401 || statusCode === 403) {
+      return 'OpenAI との接続設定に失敗しました。復旧までしばらくお待ちください。';
+    }
+
+    if (statusCode === 429) {
+      return 'OpenAI が混み合っています。少し時間をおいて再度お試しください。';
+    }
+  }
+
+  return '現在は利用できません。OpenAI からエラーが返ったため、時間をおいて再度お試しください。';
 };
 
 const renderText = async (text: string) => {
@@ -95,50 +123,69 @@ const generateResponse = async () => {
   }
 
   isLoading.value = true;
+  serviceErrorMessage.value = '';
   try {
     const apiUrl = config.public.chatGptApiUrl;
     const apiKey = config.public.chatGptApiKey;
     if (!apiUrl || !apiKey) {
-      throw new Error('CHAT_GPT_API_URL または CHATGPT_API_KEY が未設定です');
+      serviceErrorMessage.value = 'OpenAI の接続設定が不足しているため、現在は利用できません。';
+      return;
     }
 
     const questionText = inputText.value.trim();
     const questionDate = new Date().toLocaleString();
-    results.value.unshift({ date: questionDate, text: questionText, role: 'user' });
+    const userResult = { date: questionDate, text: questionText, role: 'user' } as const;
+    results.value.unshift(userResult);
     inputText.value = '';
 
-    const data = await $fetch<ChatApiResponse>(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: {
-        model: modelName.value,
-        messages: [
-          {
-            role: 'user',
-            content: questionText,
-          },
-        ],
-      },
-    });
+    let data: ChatApiResponse;
+    try {
+      data = await $fetch<ChatApiResponse>(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: {
+          model: modelName.value,
+          messages: [
+            {
+              role: 'user',
+              content: questionText,
+            },
+          ],
+        },
+      });
+    } catch (error) {
+      const userIndex = results.value.indexOf(userResult);
+      if (userIndex >= 0) {
+        results.value.splice(userIndex, 1);
+      }
+      inputText.value = questionText;
+      serviceErrorMessage.value = buildOpenAiErrorMessage(error);
+      console.error('openai request failed:', error);
+      return;
+    }
 
     const aiText = extractResponseText(data);
     const responseDate = new Date().toLocaleString();
     results.value.unshift({ date: responseDate, text: '', role: 'ai' });
     await renderText(aiText);
 
-    await client.graphql({
-      query: createChatGptResult,
-      variables: {
-        user: props.username,
-        input: questionText,
-        output: aiText,
-        createdat: responseDate,
-      },
-      authMode: 'apiKey',
-    });
+    try {
+      await client.graphql({
+        query: createChatGptResult,
+        variables: {
+          user: props.username,
+          input: questionText,
+          output: aiText,
+          createdat: responseDate,
+        },
+        authMode: 'apiKey',
+      });
+    } catch (error) {
+      console.error('chat history save failed:', error);
+    }
   } catch (error) {
     console.error(error);
     const message = error instanceof Error ? error.message : 'エラーが発生しました';
@@ -192,15 +239,59 @@ const generateResponse = async () => {
   z-index: 1;
 }
 
+.chat-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.chat-kicker {
+  margin: 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(148, 218, 255, 0.96);
+}
+
 .chat-title {
-  margin: 0 0 12px;
-  text-align: center;
+  margin: 0.24rem 0 0;
 }
 
 .chat-title a {
   color: #fff;
   text-decoration: none;
   font-size: clamp(1.5rem, 4vw, 2.4rem);
+}
+
+.status-card {
+  margin-bottom: 16px;
+  padding: 20px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(245, 197, 125, 0.24);
+  background: linear-gradient(145deg, rgba(56, 28, 7, 0.72), rgba(25, 17, 14, 0.82));
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+  color: #eef6ff;
+}
+
+.status-kicker {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 209, 129, 0.96);
+}
+
+.status-card h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.2rem, 3.2vw, 1.7rem);
+}
+
+.status-card p {
+  margin: 0;
+  line-height: 1.8;
+  color: rgba(244, 233, 223, 0.94);
 }
 
 .chat-panel {
@@ -254,6 +345,12 @@ const generateResponse = async () => {
 .chat-button.disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .chat-head {
+    flex-direction: column;
+  }
 }
 
 .chat-result {
