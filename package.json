@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
-    "test": "nuxt build",
+    "test": "npm run test:unit && nuxt build",
+    "test:unit": "node --test test/*.spec.mjs",
     "start": "nuxt preview",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

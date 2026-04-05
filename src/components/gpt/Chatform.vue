@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { generateClient } from 'aws-amplify/api';
-import { createChatGptResult } from '@/src/graphql/mutations';
+import { createChatGptResult } from '@/services/appsync/graphql/mutations';
 
 interface ChatResult {
   date: string;

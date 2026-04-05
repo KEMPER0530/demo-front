@@ -1,4 +1,4 @@
-import type { CellType, Direction, Point } from '@/components/pacman/pacmanBoardFactory';
+import type { CellType, Direction, Point } from '@/utils/pacman/pacmanBoardFactory';
 
 export const DIRECTION_LIST: Array<Exclude<Direction, 'none'>> = ['up', 'down', 'left', 'right'];
 

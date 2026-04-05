@@ -1,7 +1,7 @@
-import type { BoardCell, CellType, Direction, Ghost, Point, RenderCell } from '@/components/pacman/pacmanBoardFactory';
-import { createBoardState } from '@/components/pacman/pacmanBoardFactory';
-import { canMoveFrom, cellTypeAt, nextPoint } from '@/components/pacman/pacmanMovement';
-import { moveGhostsByAI } from '@/components/pacman/pacmanGhostAI';
+import type { BoardCell, CellType, Direction, Ghost, Point, RenderCell } from '@/utils/pacman/pacmanBoardFactory';
+import { createBoardState } from '@/utils/pacman/pacmanBoardFactory';
+import { canMoveFrom, cellTypeAt, nextPoint } from '@/utils/pacman/pacmanMovement';
+import { moveGhostsByAI } from '@/utils/pacman/pacmanGhostAI';
 
 type GameState = 'idle' | 'running' | 'paused' | 'won' | 'gameover';
 type MoveDirection = Exclude<Direction, 'none'>;

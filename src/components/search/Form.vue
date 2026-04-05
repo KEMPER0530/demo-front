@@ -15,7 +15,14 @@
         </form>
         <p v-if="errorMessage" class="search-error">{{ errorMessage }}</p>
       </div>
-      <SearchList :lists="list" :has-data="hasData" :is-loading="isLoading" />
+      <SearchList
+        :lists="list"
+        :has-data="hasData"
+        :is-loading="isLoading"
+        :is-loading-more="isLoadingMore"
+        :has-more="hasNextPage"
+        @load-more="loadMore"
+      />
     </main>
   </div>
 </template>
@@ -44,12 +51,21 @@ interface QiitaItem {
 }
 
 const config = useRuntimeConfig();
+const PER_PAGE = 20;
 
 const searchKeyword = ref('');
 const list = ref<QiitaItem[]>([]);
 const hasData = ref(true);
 const isLoading = ref(false);
+const isLoadingMore = ref(false);
 const errorMessage = ref('');
+const activeKeyword = ref('');
+const currentPage = ref(0);
+const hasNextPage = ref(false);
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 const buildQiitaEndpoint = (): string => {
   const base = (config.public.qiitaApi || '').trim();
@@ -59,45 +75,96 @@ const buildQiitaEndpoint = (): string => {
   return `${base.replace(/\/?$/, '/')}items`;
 };
 
-const sendRequest = async () => {
-  isLoading.value = true;
+const resetSearchState = (keyword: string) => {
+  list.value = [];
+  hasData.value = true;
+  hasNextPage.value = false;
+  currentPage.value = 0;
+  activeKeyword.value = keyword.trim();
+};
+
+const sendRequest = async (page: number, keyword: string, options?: { append?: boolean }) => {
+  const append = options?.append ?? false;
+  const normalizedKeyword = keyword.trim();
+  if (append) {
+    isLoadingMore.value = true;
+  } else {
+    isLoading.value = true;
+  }
   errorMessage.value = '';
   try {
     const endpoint = buildQiitaEndpoint();
     const response = await $fetch<QiitaItem[]>(endpoint, {
       params: {
-        page: 1,
-        per_page: 20,
-        query: searchKeyword.value.trim(),
+        page,
+        per_page: PER_PAGE,
+        query: normalizedKeyword,
       },
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    list.value = Array.isArray(response) ? response : [];
+    const items = Array.isArray(response) ? response : [];
+    if (append && items.length === 0) {
+      hasNextPage.value = false;
+      return false;
+    }
+
+    list.value = append ? [...list.value, ...items] : items;
     hasData.value = list.value.length > 0;
+    currentPage.value = page;
+    activeKeyword.value = normalizedKeyword;
+    hasNextPage.value = items.length === PER_PAGE;
+    return true;
   } catch (error) {
     console.error('search error:', error);
-    list.value = [];
-    hasData.value = false;
+    if (append) {
+      hasNextPage.value = false;
+    } else {
+      list.value = [];
+      hasData.value = false;
+      hasNextPage.value = false;
+      currentPage.value = 0;
+    }
     errorMessage.value = '検索に失敗しました。環境変数とAPI設定を確認してください。';
+    return false;
   } finally {
-    isLoading.value = false;
+    if (append) {
+      isLoadingMore.value = false;
+    } else {
+      isLoading.value = false;
+    }
   }
 };
 
 const search = async () => {
-  if (!searchKeyword.value.trim()) {
+  if (isLoading.value || isLoadingMore.value) {
+    return;
+  }
+
+  const keyword = searchKeyword.value.trim();
+  if (!keyword) {
     errorMessage.value = 'Please input the keyword';
     return;
   }
-  await sendRequest();
+  resetSearchState(keyword);
+  scrollToTop();
+  await sendRequest(1, keyword);
+};
+
+const loadMore = async () => {
+  if (isLoading.value || isLoadingMore.value || !hasNextPage.value || !activeKeyword.value) {
+    return;
+  }
+
+  await sendRequest(currentPage.value + 1, activeKeyword.value, { append: true });
 };
 
 onMounted(async () => {
-  searchKeyword.value = 'AWS';
-  await sendRequest();
+  const initialKeyword = 'AWS';
+  resetSearchState(initialKeyword);
+  await sendRequest(1, initialKeyword);
   searchKeyword.value = '';
 });
 </script>

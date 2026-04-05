@@ -38,7 +38,7 @@
 import PacmanBoard from '@/components/pacman/PacmanBoard.vue';
 import PacmanStatusControls from '@/components/pacman/PacmanStatusControls.vue';
 import PacmanTouchControls from '@/components/pacman/PacmanTouchControls.vue';
-import { usePacmanGame } from '@/components/pacman/pacmanGameMixin';
+import { usePacmanGame } from '@/utils/pacman/pacmanGameMixin';
 
 const {
   mazeWidth,

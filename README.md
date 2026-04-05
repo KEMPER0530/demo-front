@@ -6,7 +6,7 @@ Nuxt 3（Vue 3）で構築したフロントエンドアプリです。主な機
 - 問い合わせフォーム（AppSync GraphQL Mutation）
 - Qiita 記事検索
 - OpenAI チャット画面
-- ダッシュボード上のパックマン風ミニゲーム（Pac Dot Rush）
+- パックマン風ミニゲーム（Pac Dot Rush）
 
 ## 技術スタック
 
@@ -15,44 +15,59 @@ Nuxt 3（Vue 3）で構築したフロントエンドアプリです。主な機
 - AWS Amplify `6.x`
 - Sass
 
+## 構成方針
+
+Zenn の「Vue.js 環境構築とディレクトリ構造」の `src` 中心の考え方を参考にしつつ、Nuxt 3 向けに調整しています。  
+参考: https://zenn.dev/code_journey_ys/articles/bbe3b67bed48e2
+
+- アプリ本体は `src/` に集約する
+- Nuxt のページ、ミドルウェア、プラグインも `srcDir: 'src/'` で `src/` 配下に寄せる
+- 外部連携は `src/services/`、純粋ロジックは `src/utils/` に分離する
+- ルート直下には `nuxt.config.ts`、`server/`、`public/` など最小限の責務だけを残す
+
 ## ディレクトリ構成
 
 ```text
 demo-front/
-├─ assets/css/                     # グローバルスタイル
-├─ components/
-│  ├─ Signin.vue                   # 認証: サインイン
-│  ├─ Signup.vue                   # 認証: サインアップ
-│  ├─ Activate.vue                 # 認証: 有効化コード入力
-│  ├─ PacmanGame.vue               # Pacmanコンテナ
-│  ├─ gpt/Chatform.vue             # OpenAIチャットUI
-│  ├─ inquiry/                     # 問い合わせフォーム部品
-│  ├─ pacman/
-│  │  ├─ pacmanBoardFactory.ts     # 盤面生成
-│  │  ├─ pacmanMovement.ts         # 移動判定
-│  │  ├─ pacmanGhostAI.ts          # ゴーストAI
-│  │  ├─ pacmanGameMixin.ts        # usePacmanGame composable
-│  │  ├─ PacmanBoard.vue           # 盤面描画
-│  │  ├─ PacmanStatusControls.vue  # LEVEL/LIFE/SPEED操作
-│  │  └─ PacmanTouchControls.vue   # モバイル操作UI
-│  └─ search/                      # 検索画面部品（Element UI 不使用）
-├─ composables/useAuth.ts          # 認証状態管理
-├─ middleware/
-│  ├─ auth.global.ts               # 認証必須ルート制御
-│  └─ guest.ts                     # ゲスト専用ルート制御
-├─ pages/
-│  ├─ index.vue
-│  ├─ signin.vue
-│  ├─ signup.vue
-│  ├─ activate.vue
-│  ├─ search/index.vue           # <SearchNavbar /> を描画
-│  ├─ inquiry/index.vue
-│  ├─ gpt/index.vue              # <GptChatform /> を描画
-│  ├─ privacy.vue
-│  └─ terms.vue
-├─ plugins/amplify.client.ts       # Amplify初期化
-├─ src/graphql/mutations.js        # GraphQL Mutation 定義
-├─ app.vue
+├─ public/
+│  └─ favicon.ico
+├─ server/
+│  └─ api/openai/status.get.ts     # OpenAI 疎通確認 API
+├─ src/
+│  ├─ app.vue
+│  ├─ assets/
+│  │  └─ css/
+│  ├─ components/
+│  │  ├─ gpt/                      # OpenAI UI
+│  │  ├─ inquiry/                  # 問い合わせフォーム UI
+│  │  ├─ pacman/                   # Pacman 描画 UI
+│  │  ├─ search/                   # 検索画面 UI
+│  │  └─ DashboardBackLink.vue     # 共通戻る導線
+│  ├─ composables/
+│  │  └─ useAuth.ts
+│  ├─ middleware/
+│  │  ├─ auth.global.ts
+│  │  └─ guest.ts
+│  ├─ pages/
+│  │  ├─ gpt/
+│  │  ├─ inquiry/
+│  │  ├─ pacman/
+│  │  └─ search/
+│  ├─ plugins/
+│  │  └─ amplify.client.ts
+│  ├─ services/
+│  │  └─ appsync/
+│  │     ├─ appsync-exports.js
+│  │     └─ graphql/
+│  │        ├─ mutations.js
+│  │        └─ query.js
+│  ├─ store/
+│  │  └─ index.js
+│  └─ utils/
+│     └─ pacman/                   # Pacman のゲームロジック
+├─ test/
+│  ├─ appsync-config.spec.mjs
+│  └─ graphql.spec.mjs
 ├─ nuxt.config.ts
 └─ package.json
 ```
@@ -62,16 +77,16 @@ demo-front/
 前提:
 
 - Node.js `20.10.0` 以上
-- Yarn `1.x`
+- npm `10` 以上
 
 ```bash
-yarn install
+npm install
 ```
 
 ## ローカル起動
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 起動後:
@@ -81,13 +96,27 @@ yarn dev
 ## ビルド
 
 ```bash
-yarn build
+npm run build
 ```
 
 プレビュー:
 
 ```bash
-yarn preview
+npm run preview
+```
+
+## テスト
+
+ユニットテスト:
+
+```bash
+npm run test:unit
+```
+
+ユニットテスト + Nuxt ビルド確認:
+
+```bash
+npm test
 ```
 
 ## 環境変数
@@ -110,25 +139,24 @@ yarn preview
 
 ## 認証仕様
 
-- `middleware/auth.global.ts` で以下を公開ページとして許可:
+- `src/middleware/auth.global.ts` で以下を公開ページとして許可:
   - `/signin`
   - `/signup`
   - `/activate`
   - `/privacy`
   - `/terms`
-- それ以外は未ログイン時 `/signin` へリダイレクト。
-- `middleware/guest.ts` はログイン済みユーザーを `/` へリダイレクト。
+- それ以外は未ログイン時 `/signin` へリダイレクト
+- `src/middleware/guest.ts` はログイン済みユーザーを `/` へリダイレクト
 - ダッシュボード（`/`）上で `Qiita記事` と `OpenAI` のカードを表示する条件:
   - ログイン済み
   - `ログインユーザーの email` が `ALLOWED_USERNAME` と一致
 
 ## Nuxt3 コンポーネント命名の注意
 
-- Nuxt3 の自動インポートでは、ネストしたコンポーネント名はプレフィックス付きになります。
+- Nuxt3 の自動インポートでは、ネストしたコンポーネント名はプレフィックス付きになります
 - 本プロジェクトの例:
-  - `components/search/Navbar.vue` -> `SearchNavbar`
-  - `components/gpt/Chatform.vue` -> `GptChatform`
-- `pages/search/index.vue` / `pages/gpt/index.vue` では、この名前で参照してください。
+  - `src/components/search/Navbar.vue` -> `SearchNavbar`
+  - `src/components/gpt/Chatform.vue` -> `GptChatform`
 
 ## Pac Dot Rush 仕様
 
@@ -145,12 +173,3 @@ yarn preview
   - `SPEED`: 80〜280ms（10ms刻み）
 - ベストスコア保存:
   - `localStorage` キー `pac_dot_rush_best`
-
-## 移行メモ（Vue2 -> Vue3）
-
-- Nuxt2 設定（`nuxt.config.js`）を廃止し `nuxt.config.ts` へ移行。
-- Vue2 専用プラグイン（Element UI / FontAwesome / old Amplify plugin）を削除。
-- 認証処理を `this.$auth` から `useAuth()` へ移行。
-- 検索画面を Element UI 依存からプレーン Vue3 実装へ置換。
-- AppSync 呼び出しを Amplify v6 `generateClient()` ベースへ移行。
-- Pacman 実装を Vue3 composable ベースへ移行。

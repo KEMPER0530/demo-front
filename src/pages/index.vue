@@ -18,17 +18,19 @@
           <span class="action-label">Qiita記事</span>
           <small>検索ページへ</small>
         </NuxtLink>
-        <NuxtLink v-if="isLoggedInAndAllowed" to="/gpt" class="action-card fade-up delay-3">
+        <NuxtLink to="/pacman" class="action-card fade-up delay-3">
+          <span class="action-label">Pac Dot Rush</span>
+          <small>ゲームページへ</small>
+        </NuxtLink>
+        <NuxtLink v-if="isLoggedInAndAllowed" to="/gpt" class="action-card fade-up delay-4">
           <span class="action-label">OpenAI</span>
           <small>チャットページへ</small>
         </NuxtLink>
-        <button class="action-card logout-card fade-up delay-3" @click.prevent="logout">
+        <button class="action-card logout-card fade-up delay-4" @click.prevent="logout">
           <span class="action-label">Logout</span>
           <small>サインアウト</small>
         </button>
       </section>
-
-      <PacmanGame class="fade-up delay-2" />
     </main>
   </div>
 </template>
@@ -187,6 +189,10 @@ const logout = async () => {
 
 .delay-3 {
   animation-delay: 0.24s;
+}
+
+.delay-4 {
+  animation-delay: 0.32s;
 }
 
 @keyframes fade-up {
