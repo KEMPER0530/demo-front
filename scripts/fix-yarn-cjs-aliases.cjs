@@ -13,9 +13,6 @@ function ensureReexportPackage(targetName, aliasName) {
   const targetDir = path.join(nodeModules, targetName);
   const aliasDir = path.join(nodeModules, aliasName);
 
-  if (fs.existsSync(targetDir)) {
-    return;
-  }
   if (!fs.existsSync(aliasDir)) {
     return;
   }
