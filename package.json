@@ -21,7 +21,7 @@
     "wrap-ansi": "7.0.0"
   },
   "devDependencies": {
-    "sass": "^1.90.0"
+    "sass": "^1.99.0"
   },
   "resolutions": {
     "nuxi": "3.13.2",
