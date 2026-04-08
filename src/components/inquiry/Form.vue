@@ -4,10 +4,15 @@
     <div class="inquiry-ambient ambient-b" />
     <div class="inquiry-shell">
       <header class="inquiry-head">
-        <h1 class="inquiry-title">
-          <NuxtLink to="/">メール送信デモ</NuxtLink>
-        </h1>
-        <p class="inquiry-subtitle">Amazon SES 連携フォーム</p>
+        <div class="inquiry-head-main">
+          <div>
+            <h1 class="inquiry-title">
+              <NuxtLink to="/">メール送信デモ</NuxtLink>
+            </h1>
+            <p class="inquiry-subtitle">Amazon SES 連携フォーム</p>
+          </div>
+          <DashboardBackLink />
+        </div>
       </header>
       <Submitted v-if="isSubmited" />
       <div v-if="!isSubmited" class="inquiry-layout">
@@ -106,7 +111,7 @@ import SubjectInput from '@/components/inquiry/SubjectInput.vue';
 import BodyInput from '@/components/inquiry/BodyInput.vue';
 import Button from '@/components/inquiry/Button.vue';
 import Error from '@/components/inquiry/Error.vue';
-import { createNuxtMail } from '@/src/graphql/mutations';
+import { createNuxtMail } from '@/services/appsync/graphql/mutations';
 
 const client = generateClient();
 
@@ -298,6 +303,13 @@ const onSubmit = async () => {
   background: linear-gradient(98deg, rgba(6, 39, 83, 0.46), rgba(16, 16, 16, 0.08));
 }
 
+.inquiry-head-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
 .inquiry-title a {
   font-size: clamp(1.5rem, 4vw, 2.35rem);
   color: #ffffff;
@@ -400,6 +412,10 @@ const onSubmit = async () => {
 }
 
 @media (max-width: 960px) {
+  .inquiry-head-main {
+    flex-direction: column;
+  }
+
   .inquiry-layout {
     grid-template-columns: 1fr;
   }

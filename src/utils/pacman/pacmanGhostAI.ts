@@ -1,9 +1,9 @@
-import type { CellType, Direction, Ghost, Point } from '@/components/pacman/pacmanBoardFactory';
+import type { CellType, Direction, Ghost, Point } from '@/utils/pacman/pacmanBoardFactory';
 import {
   OPPOSITE_DIRECTION,
   availableDirections,
   nextPoint,
-} from '@/components/pacman/pacmanMovement';
+} from '@/utils/pacman/pacmanMovement';
 
 function distanceFromPacman(from: Point, pacman: Point): number {
   return Math.abs(pacman.x - from.x) + Math.abs(pacman.y - from.y);

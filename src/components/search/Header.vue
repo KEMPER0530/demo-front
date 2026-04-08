@@ -1,9 +1,14 @@
 <template>
   <header class="search-hero">
     <div class="search-hero-inner">
-      <p class="hero-kicker">Discover</p>
-      <h1><NuxtLink to="/">Qiita記事</NuxtLink></h1>
-      <p class="hero-sub">キーワードから記事を検索し、気になる技術トピックをすぐに発見できます。</p>
+      <div class="search-hero-main">
+        <div>
+          <p class="hero-kicker">Discover</p>
+          <h1><NuxtLink to="/">Qiita記事</NuxtLink></h1>
+          <p class="hero-sub">キーワードから記事を検索し、気になる技術トピックをすぐに発見できます。</p>
+        </div>
+        <DashboardBackLink />
+      </div>
     </div>
   </header>
 </template>
@@ -24,6 +29,13 @@
   width: min(1140px, 100%);
   margin: 0 auto;
   animation: fade-up 0.7s ease-out;
+}
+
+.search-hero-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .hero-kicker {
@@ -47,6 +59,12 @@ h1 a {
 .hero-sub {
   margin: 0;
   color: rgba(220, 235, 255, 0.94);
+}
+
+@media (max-width: 640px) {
+  .search-hero-main {
+    flex-direction: column;
+  }
 }
 
 @keyframes fade-up {
