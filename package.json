@@ -16,7 +16,7 @@
   "dependencies": {
     "aws-amplify": "^6.15.8",
     "nuxt": "3.13.2",
-    "string-width": "4.2.3",
+    "string-width": "8.2.0",
     "strip-ansi": "6.0.1",
     "wrap-ansi": "7.0.0"
   },
@@ -28,7 +28,7 @@
     "nitropack": "2.9.7",
     "c12": "1.11.2",
     "unstorage": "1.12.0",
-    "string-width": "4.2.3",
+    "string-width": "8.2.0",
     "strip-ansi": "6.0.1",
     "wrap-ansi": "7.0.0"
   }
