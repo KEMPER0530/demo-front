@@ -14,13 +14,18 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: yarn
+
+      - name: Install Yarn classic
+        run: |
+          npm install -g yarn@1.22.22
+          yarn --version
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
