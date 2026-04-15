@@ -22,9 +22,13 @@ jobs:
           node-version: 20
           cache: yarn
 
-      - name: Install Yarn classic
+      - name: Ensure Yarn classic 1.22.22
         run: |
-          npm install -g yarn@1.22.22
+          YARN_VERSION="$(yarn --version 2>/dev/null || true)"
+          if [ "$YARN_VERSION" != "1.22.22" ]; then
+            corepack enable
+            corepack prepare yarn@1.22.22 --activate
+          fi
           yarn --version
 
       - name: Install dependencies
