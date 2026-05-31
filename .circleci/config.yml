@@ -19,11 +19,8 @@ jobs:
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
-          name: Activate Yarn Classic
-          command: |
-            corepack enable
-            corepack prepare yarn@1.22.22 --activate
-            yarn --version
+          name: Check Yarn version
+          command: yarn --version
       - run: yarn install --frozen-lockfile
       - save_cache:
           name: Save Yarn Package Cache
