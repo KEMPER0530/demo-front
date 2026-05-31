@@ -4,7 +4,7 @@ orbs:
 defaults: &defaults
   working_directory: ~/aws-rough
   docker:
-    - image: cimg/node:20.19.0
+    - image: cimg/node:22.12.0
 filter_only_main: &filter_only_main
   filters:
     branches:
