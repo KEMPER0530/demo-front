@@ -4,7 +4,7 @@ orbs:
 defaults: &defaults
   working_directory: ~/aws-rough
   docker:
-    - image: cimg/node:20.10.0
+    - image: cimg/node:20.19.0
 filter_only_main: &filter_only_main
   filters:
     branches:
@@ -18,7 +18,13 @@ jobs:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
-      - run: yarn install
+      - run:
+          name: Activate Yarn Classic
+          command: |
+            corepack enable
+            corepack prepare yarn@1.22.22 --activate
+            yarn --version
+      - run: yarn install --frozen-lockfile
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
