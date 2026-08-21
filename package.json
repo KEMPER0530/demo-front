@@ -18,7 +18,7 @@
     "nuxt": "4.4.2",
     "string-width": "8.2.1",
     "strip-ansi": "7.2.0",
-    "wrap-ansi": "10.0.0"
+    "wrap-ansi": "10.0.1"
   },
   "devDependencies": {
     "sass": "^1.100.0"
@@ -26,6 +26,6 @@
   "resolutions": {
     "string-width": "8.2.1",
     "strip-ansi": "7.2.0",
-    "wrap-ansi": "10.0.0"
+    "wrap-ansi": "10.0.1"
   }
 }
