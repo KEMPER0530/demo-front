@@ -21,7 +21,7 @@
     "wrap-ansi": "10.0.1"
   },
   "devDependencies": {
-    "sass": "^1.102.0"
+    "sass": "^1.104.1"
   },
   "resolutions": {
     "string-width": "8.2.2",
