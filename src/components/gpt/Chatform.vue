@@ -34,12 +34,7 @@
       <div :class="result.role === 'user' ? 'chat-result user' : 'chat-result ai'" v-for="(result, index) in results" :key="index">
         <div class="chat-result-body">
           <div class="chat-date">{{ result.date }}</div>
-          <div v-if="result.role === 'user'">
-            <span v-html="formatText(result.text)" />
-          </div>
-          <div v-else>
-            <span v-html="result.text" />
-          </div>
+          <div class="chat-text">{{ result.text }}</div>
         </div>
       </div>
     </div>
@@ -47,6 +42,8 @@
 </template>
 
 <script setup lang="ts">
+import { fetchAuthSession } from 'aws-amplify/auth';
+import { createChatRequest } from '@/services/chat-request.mjs';
 import { generateClient } from 'aws-amplify/api';
 import { createChatGptResult } from '@/services/appsync/graphql/mutations';
 
@@ -72,10 +69,6 @@ const serviceErrorMessage = ref('');
 
 const isInputValid = computed(() => inputText.value.trim().length > 0);
 
-const formatText = (text: string) => {
-  return text.replace(/\n/g, '<br>');
-};
-
 const buildOpenAiErrorMessage = (error: unknown): string => {
   if (error && typeof error === 'object') {
     const statusCode = 'statusCode' in error && typeof error.statusCode === 'number' ? error.statusCode : null;
@@ -93,8 +86,7 @@ const buildOpenAiErrorMessage = (error: unknown): string => {
 };
 
 const renderText = async (text: string) => {
-  const rendered = formatText(text);
-  const chars = rendered.split('');
+  const chars = Array.from(text);
   const typeSpeed = 35;
   let index = 0;
 
@@ -125,13 +117,14 @@ const generateResponse = async () => {
   isLoading.value = true;
   serviceErrorMessage.value = '';
   try {
-    const apiUrl = config.public.chatGptApiUrl;
-    const apiKey = config.public.chatGptApiKey;
-    if (!apiUrl || !apiKey) {
+    const apiUrl = config.public.chatGptProxyUrl;
+    if (!apiUrl) {
       serviceErrorMessage.value = 'OpenAI の接続設定が不足しているため、現在は利用できません。';
       return;
     }
 
+    const session = await fetchAuthSession();
+    const request = createChatRequest(apiUrl, session.tokens?.idToken?.toString());
     const questionText = inputText.value.trim();
     const questionDate = new Date().toLocaleString();
     const userResult = { date: questionDate, text: questionText, role: 'user' } as const;
@@ -140,11 +133,11 @@ const generateResponse = async () => {
 
     let data: ChatApiResponse;
     try {
-      data = await $fetch<ChatApiResponse>(apiUrl, {
+      data = await $fetch<ChatApiResponse>(request.url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: request.authorization,
         },
         body: {
           model: modelName.value,
@@ -371,6 +364,11 @@ const generateResponse = async () => {
 .chat-result.ai {
   background: linear-gradient(145deg, rgba(30, 98, 88, 0.62), rgba(16, 29, 27, 0.72));
   color: #ecfff8;
+}
+
+.chat-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .chat-result-body {
