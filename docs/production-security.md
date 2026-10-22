@@ -1,0 +1,33 @@
+# 本番の秘密情報対策
+
+対象: `s3nuxt.kemper0530.com` / S3 `nuxt-mail-demo` / CloudFront `EYKEA7W3EI8O3`
+
+## 2026-10-22 の対応
+
+- 公開URL `/.env` が HTTP 200 で環境変数を返し、OpenAIキーが含まれていることを確認した。秘密値はログやこの文書へ記載していない。
+- バケットポリシーへ `DenyPublicDotEnvRead` を追加し、`.env` と `.env.*` に対する `s3:GetObject` / `s3:GetObjectVersion` を拒否した。既存のサイト配信許可は保持している。
+- CloudFrontで `/.env*` を無効化し、完了を確認した。その後 `/.env` は HTTP 404、トップページは HTTP 200 となった。
+- 利用者の承認後、S3上の `.env` を完全削除し、残存バージョンがないことを確認した。
+- PR #39 の修正が本番へ反映され、トップページの公開設定に `chatGptProxyUrl` があり、`chatGptApiKey` が含まれないことを確認した。
+
+## OpenAIキー管理の範囲
+
+AWSのIAM権限ではOpenAIキーを管理できない。本作業ではOpenAIキーの有効性確認・無効化・再発行は実施していない。秘密値をチャットへ貼り付けない。
+
+新しいキーは認証・認可・レート制限を行う中継APIのサーバー側だけで保管する。CircleCIの `CHATGPT_API_KEY` やNuxtの公開設定へ新しいキーを登録しない。中継APIのURLは `CHAT_GPT_PROXY_URL` としてビルド時に渡す。中継API未設定時はチャットを利用できない。
+
+## `.env` の代替
+
+- AWSリージョン、CognitoユーザープールID、公開API URLなどはCircleCIのプロジェクト環境変数として設定し、`yarn generate` の実行時に渡す。静的サイトへ埋め込まれた値は利用者から見える。
+- OpenAIなどの秘密キーもCircleCIの環境変数で保管する。利用する場合は中継APIのデプロイ先のサーバー環境変数へ渡し、サーバー側だけで参照する。Nuxtの公開設定や静的HTMLには埋め込まない。Secrets Managerは本作業で使用しない。
+- 現在のサイトはビルド済み設定を使うため、公開S3の `.env` 削除では設定を失わない。チャット再開には `CHAT_GPT_PROXY_URL` と中継APIの用意が必要で、本作業で中継APIは作成していない。
+
+## 旧配信ファイルの検査
+
+S3内のテキスト形式453ファイルを検査し、キー形式の文字列が残る旧ファイル53件を検出した。秘密値は記録していない。対象は旧7桁ハッシュのJavaScript50件と旧大文字パスのHTML3件。利用者の明示承認後、53件だけを `DenyLegacySecretArtifacts` で読み取り拒否し、同じ53パスだけCloudFrontキャッシュを失効した。ファイル削除は行っていない。
+
+検証結果: 旧53 URLすべてがHTTP 403または404で取得不可。トップページと現行エントリーJavaScriptはHTTP 200、`/.env` はHTTP 404。CloudFront失効 `ILZ1W8B96BCMEAKXNTE6SH9AU` の状態は `Completed`。OpenAIキーの有効性確認・無効化・再発行は実施していない。
+
+## 再発防止
+
+`.env` をS3へアップロードしない。サイトを再デプロイしても `.env` 読み取り拒否ポリシーは維持する。公開停止では過去に取得された秘密値は回収できない。OpenAIキーの管理は別途行う。

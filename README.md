@@ -126,7 +126,7 @@ npm test
 
 ## 環境変数
 
-`.env` に以下を設定してください（`nuxt.config.ts` の `runtimeConfig.public` で参照）。
+以下はビルド時の公開設定です（`nuxt.config.ts` の `runtimeConfig.public` で参照）。秘密のAPIキーを設定しないでください。`.env` は公開S3へアップロードしません。
 
 - `MODE`
 - `QIITA_API`
@@ -137,10 +137,11 @@ npm test
 - `AWS_COGNITO_REIGION`
 - `AWS_COGNITO_USERPOOLID`
 - `AWS_COGNITO_USERPOOLWEBCLIENTID`
-- `CHAT_GPT_API_URL`
-- `CHATGPT_API_KEY`
+- `CHAT_GPT_PROXY_URL`（Cognito IDトークンを検証し、認可・レート制限を行うHTTPS中継API）
 - `CHAT_GPT_MODEL`
 - `ALLOWED_USERNAME`
+
+OpenAIのAPIキーは中継APIのサーバー側だけに保存します。中継API未設定時はチャットを利用できません。過去に `CHATGPT_API_KEY` を公開設定へ渡していた場合は、そのキーを失効・再発行してください。
 
 ## 認証仕様
 
